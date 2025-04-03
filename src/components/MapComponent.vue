@@ -6,14 +6,14 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import mabpoxgl from 'mapbox-gl'
+import mapboxgl from 'mapbox-gl'
 
 const apiKey = process.env.MAPBOX_API_KEY
 const mapContainer = ref(null)
 const dataMarkers = [{ lng: 13.407557, lat: 52.509237 }]
 
 onMounted(() => {
-  const map = new mabpoxgl.Map({
+  const map = new mapboxgl.Map({
     container: 'map',
     // frank
     // style: 'mapbox://styles/karinmiriam/cko88xcgl4vju18pgby8zpan6',
@@ -25,9 +25,19 @@ onMounted(() => {
   })
 
   dataMarkers.forEach((marker) => {
-    new mapboxgl.Marker().setLngLat([marker.lng, marker.lat]).addTo(map)
+    new mapboxgl.Marker({ element: createCustomMarker() })
+      .setLngLat([marker.lng, marker.lat])
+      .addTo(map)
   })
 
+  function createCustomMarker() {
+    const markerElement = document.createElement('div')
+    markerElement.style.backgroundImage = 'url(/blue-marker.png)'
+    markerElement.style.backgroundSize = 'contain'
+    markerElement.style.width = '24px'
+    markerElement.style.height = '48px'
+    return markerElement
+  }
   // map.addControl(new mapboxgl.NavigationControl())
 })
 </script>
