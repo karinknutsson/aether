@@ -18,7 +18,9 @@ onMounted(() => {
     // frank
     // style: 'mapbox://styles/karinmiriam/cko88xcgl4vju18pgby8zpan6',
     // aetheric
-    style: 'mapbox://styles/karinmiriam/cm915r01k009b01s457lv403i',
+    // style: 'mapbox://styles/karinmiriam/cm915r01k009b01s457lv403i',
+    // blue
+    style: 'mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj',
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? '',
@@ -32,7 +34,7 @@ onMounted(() => {
 
   function createCustomMarker() {
     const markerElement = document.createElement('div')
-    markerElement.style.backgroundImage = 'url(/blue-marker.png)'
+    markerElement.style.backgroundImage = 'url(/red-pin.png)'
     markerElement.style.backgroundSize = 'contain'
     markerElement.style.width = '24px'
     markerElement.style.height = '48px'
