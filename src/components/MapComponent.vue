@@ -7,10 +7,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import mapboxgl from 'mapbox-gl'
+import { entries } from './markerData'
 
 const apiKey = process.env.MAPBOX_API_KEY
 const mapContainer = ref(null)
-const dataMarkers = [{ lng: 13.407557, lat: 52.509237 }]
 
 onMounted(() => {
   const map = new mapboxgl.Map({
@@ -19,14 +19,16 @@ onMounted(() => {
     // style: 'mapbox://styles/karinmiriam/cko88xcgl4vju18pgby8zpan6',
     // aetheric
     // style: 'mapbox://styles/karinmiriam/cm915r01k009b01s457lv403i',
-    // blue
-    style: 'mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj',
+    // blue monochrome
+    // style: 'mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj',
+    // lavender-blue
+    style: 'mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk',
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? '',
   })
 
-  dataMarkers.forEach((marker) => {
+  entries.forEach((marker) => {
     new mapboxgl.Marker({ element: createCustomMarker() })
       .setLngLat([marker.lng, marker.lat])
       .addTo(map)
@@ -34,7 +36,7 @@ onMounted(() => {
 
   function createCustomMarker() {
     const markerElement = document.createElement('div')
-    markerElement.style.backgroundImage = 'url(/red-pin.png)'
+    markerElement.style.backgroundImage = 'url(/blue-pin.png)'
     markerElement.style.backgroundSize = 'contain'
     markerElement.style.width = '24px'
     markerElement.style.height = '48px'
