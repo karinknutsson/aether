@@ -1,12 +1,16 @@
 <template>
-  <q-page class="row items-center justify-center">
-    <div>
+  <q-page class="row">
+    <!-- <div>
       <div class="blue-div"></div>
       <h1 class="logo">ÆTHER</h1>
       <div class="red-div"></div>
-    </div>
+    </div> -->
 
-    <div><MapComponent /></div>
+    <div class="col-xs-1 col-sm-2"></div>
+    <div class="col-xs-10 col-sm-8">
+      <div class="map-wrapper"><MapComponent /></div>
+    </div>
+    <div class="col-xs-1 col-sm-2"></div>
   </q-page>
 </template>
 
@@ -15,6 +19,10 @@ import MapComponent from 'src/components/MapComponent.vue'
 </script>
 
 <style scoped lang="scss">
+.map-wrapper {
+  margin-top: 80px;
+}
+
 .blue-div {
   width: 320px;
   height: 320px;

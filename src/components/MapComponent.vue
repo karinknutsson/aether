@@ -42,7 +42,8 @@ onMounted(() => {
     markerElement.style.height = '48px'
     return markerElement
   }
-  // map.addControl(new mapboxgl.NavigationControl())
+
+  map.addControl(new mapboxgl.NavigationControl())
 })
 </script>
 
@@ -54,7 +55,7 @@ onMounted(() => {
 }
 
 .map-container {
-  width: 1000px;
-  height: 600px;
+  width: 100%;
+  height: 80vh;
 }
 </style>
