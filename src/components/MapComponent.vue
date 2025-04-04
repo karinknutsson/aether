@@ -18,11 +18,11 @@ onMounted(() => {
     // frank
     // style: 'mapbox://styles/karinmiriam/cko88xcgl4vju18pgby8zpan6',
     // aetheric
-    // style: 'mapbox://styles/karinmiriam/cm915r01k009b01s457lv403i',
+    style: 'mapbox://styles/karinmiriam/cm915r01k009b01s457lv403i',
     // blue monochrome
     // style: 'mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj',
     // lavender-blue
-    style: 'mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk',
+    // style: 'mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk',
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? '',
@@ -43,7 +43,7 @@ onMounted(() => {
     return markerElement
   }
 
-  map.addControl(new mapboxgl.NavigationControl())
+  // map.addControl(new mapboxgl.NavigationControl())
 })
 </script>
 
