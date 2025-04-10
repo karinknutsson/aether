@@ -2,7 +2,7 @@
   <q-page class="row">
     <div class="flex items-center">
       <div class="blue-div"></div>
-      <h1 class="logo">ÆTHER</h1>
+      <span class="logo">ÆtHER</span>
       <div class="red-div"></div>
     </div>
 
@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import MapComponent from 'src/components/MapComponent.vue'
-import CursorComponent from 'src/components/CursorComponent.vue'
+import MapComponent from "src/components/MapComponent.vue";
+import CursorComponent from "src/components/CursorComponent.vue";
 </script>
 
 <style scoped lang="scss">

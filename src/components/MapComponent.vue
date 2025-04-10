@@ -57,10 +57,8 @@ onMounted(() => {
       type: "circle",
       source: "places",
       paint: {
-        "circle-color": "#4264fb",
-        "circle-radius": 6,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff",
+        "circle-color": "transparent",
+        "circle-radius": 24,
       },
     });
   });
@@ -97,6 +95,10 @@ onMounted(() => {
   color: $font-color;
   text-decoration: none;
   font-size: 8px;
+}
+
+:deep(.mapboxgl-marker) {
+  pointer-events: none;
 }
 
 .map-container {
