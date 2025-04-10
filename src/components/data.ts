@@ -8,7 +8,7 @@ export const features: Feature[] = [
     },
     geometry: {
       type: "Point",
-      coordinates: [52.487252, 13.469367],
+      coordinates: [13.469367, 52.487252],
     },
   },
   {
@@ -18,7 +18,7 @@ export const features: Feature[] = [
     },
     geometry: {
       type: "Point",
-      coordinates: [52.487731, 13.211403],
+      coordinates: [13.211403, 52.487731],
     },
   },
   {
@@ -28,7 +28,7 @@ export const features: Feature[] = [
     },
     geometry: {
       type: "Point",
-      coordinates: [52.512238, 13.340973],
+      coordinates: [13.340973, 52.512238],
     },
   },
   {
@@ -38,7 +38,7 @@ export const features: Feature[] = [
     },
     geometry: {
       type: "Point",
-      coordinates: [52.535379, 13.464988],
+      coordinates: [13.464988, 52.535379],
     },
   },
   //   { lat:, lng: , title: 'Grunewald' },

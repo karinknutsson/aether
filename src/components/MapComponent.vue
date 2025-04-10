@@ -30,7 +30,7 @@ onMounted(() => {
 
   features.forEach((feature) => {
     new mapboxgl.Marker({ element: createCustomMarker() })
-      .setLngLat([feature.geometry.coordinates[1], feature.geometry.coordinates[0]])
+      .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
       .addTo(map);
   });
 
@@ -43,7 +43,52 @@ onMounted(() => {
     return markerElement;
   }
 
-  // map.addControl(new mapboxgl.NavigationControl())
+  map.on("style.load", () => {
+    map.addSource("places", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features,
+      },
+    });
+
+    map.addLayer({
+      id: "places",
+      type: "circle",
+      source: "places",
+      paint: {
+        "circle-color": "#4264fb",
+        "circle-radius": 6,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ffffff",
+      },
+    });
+  });
+
+  const popup = new mapboxgl.Popup({
+    closeButton: false,
+    closeOnClick: false,
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  map.on("mouseenter", "places", (e: any) => {
+    map.getCanvas().style.cursor = "pointer";
+
+    const coordinates = e.features[0].geometry.coordinates.slice();
+    const description = e.features[0].properties.description;
+
+    if (["mercator", "equirectangular"].includes(map.getProjection().name)) {
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+    }
+
+    popup.setLngLat(coordinates).setHTML(description).addTo(map);
+  });
+
+  map.on("mouseleave", "places", () => {
+    map.getCanvas().style.cursor = "";
+    popup.remove();
+  });
 });
 </script>
 
