@@ -69,6 +69,7 @@ onMounted(() => {
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("mouseenter", "places", (e: any) => {
+    // console.log(e);
     map.getCanvas().style.cursor = "pointer";
 
     const coordinates = e.features[0].geometry.coordinates.slice();
@@ -81,13 +82,23 @@ onMounted(() => {
     }
 
     popup.setLngLat(coordinates).setHTML(description).addTo(map);
+
+    startEmitCircles(e.originalEvent.pageX, e.originalEvent.pageY);
   });
 
   map.on("mouseleave", "places", () => {
     map.getCanvas().style.cursor = "";
     popup.remove();
+    stopEmitCircles();
   });
 });
+
+function startEmitCircles(x: number, y: number) {
+  console.log(x);
+  console.log(y);
+}
+
+function stopEmitCircles() {}
 </script>
 
 <style scoped lang="scss">
