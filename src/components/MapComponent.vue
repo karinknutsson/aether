@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div ref="circleContainer" class="circle-container"></div>
+  <div style="background: magenta">
+    <!-- <div class="circle"></div> -->
     <div ref="mapContainer" id="map" class="map-container"></div>
   </div>
 </template>
@@ -8,9 +10,12 @@
 import { onMounted, ref } from "vue";
 import mapboxgl from "mapbox-gl";
 import { features } from "./data";
+import gsap from "gsap";
 
+let isEmittingCircles = false;
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
+const circleContainer = ref<HTMLElement | null>(null);
 
 onMounted(() => {
   const map = new mapboxgl.Map({
@@ -67,6 +72,7 @@ onMounted(() => {
     closeButton: false,
     closeOnClick: false,
   });
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("mouseenter", "places", (e: any) => {
     // console.log(e);
@@ -93,15 +99,79 @@ onMounted(() => {
   });
 });
 
-function startEmitCircles(x: number, y: number) {
-  console.log(x);
-  console.log(y);
+function createCircle(x: number, y: number) {
+  const circle = document.createElement("div");
+  circle.classList.add("circle");
+  circle.style.width = "10px";
+  circle.style.height = "10px";
+  circle.style.top = `${y}px`;
+  circle.style.left = `${x}px`;
+  circle.style.border = "1px solid white";
+  circle.style.backgroundColor = "transparent";
+  circle.style.borderRadius = "50%";
+  circle.style.opacity = "1";
+  circle.style.zIndex = "50000";
+  circle.style.position = "absolute";
+  return circle;
 }
 
-function stopEmitCircles() {}
+function growCircle(circle: HTMLElement) {
+  let maxSize;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  if (width > height) {
+    maxSize = width * 2;
+  } else {
+    maxSize = height * 2;
+  }
+
+  gsap.to(circle, {
+    width: `${maxSize}px`,
+    height: `${maxSize}px`,
+    x: `-=${maxSize / 2}px`,
+    y: `-=${maxSize / 2}px`,
+    duration: 3,
+    ease: "none",
+  });
+}
+
+function startEmitCircles(x: number, y: number) {
+  if (isEmittingCircles) return;
+
+  isEmittingCircles = true;
+  const circle = createCircle(x, y);
+
+  if (circleContainer.value) {
+    circleContainer.value.appendChild(circle);
+    growCircle(circle);
+  }
+
+  // console.log(circle);
+}
+
+function stopEmitCircles() {
+  // if (!isEmittingCirlces) return;
+  // isEmittingCirlces = false;
+}
 </script>
 
 <style scoped lang="scss">
+.circle-container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 0, 0.5);
+}
+
+// .circle {
+//   background: magenta;
+//   border-radius: 50%;
+//   position: absolute;
+//   z-index: 10000;
+// }
 :deep(a) {
   color: $font-color;
   text-decoration: none;
