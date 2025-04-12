@@ -16,6 +16,8 @@ let isEmittingCircles = false;
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
 const circleContainer = ref<HTMLElement | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let circleIntervalId = 0;
 
 onMounted(() => {
   const map = new mapboxgl.Map({
@@ -63,7 +65,7 @@ onMounted(() => {
       source: "places",
       paint: {
         "circle-color": "transparent",
-        "circle-radius": 24,
+        "circle-radius": 32,
       },
     });
   });
@@ -116,23 +118,16 @@ function createCircle(x: number, y: number) {
 }
 
 function growCircle(circle: HTMLElement) {
-  let maxSize;
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  if (width > height) {
-    maxSize = width * 2;
-  } else {
-    maxSize = height * 2;
-  }
+  const maxSize = 600;
 
   gsap.to(circle, {
     width: `${maxSize}px`,
     height: `${maxSize}px`,
     x: `-=${maxSize / 2}px`,
     y: `-=${maxSize / 2}px`,
-    duration: 3,
+    duration: 4,
     ease: "none",
+    opacity: 0,
   });
 }
 
@@ -140,20 +135,33 @@ function startEmitCircles(x: number, y: number) {
   if (isEmittingCircles) return;
 
   isEmittingCircles = true;
-  const circle = createCircle(x, y);
+  emitCircles(x, y);
+}
 
-  if (circleContainer.value) {
-    circleContainer.value.appendChild(circle);
-    growCircle(circle);
-  }
+function emitCircles(x: number, y: number) {
+  circleIntervalId = window.setInterval(() => {
+    const circle = createCircle(x, y);
 
-  // console.log(circle);
+    if (circleContainer.value) {
+      circleContainer.value.appendChild(circle);
+      growCircle(circle);
+    }
+  }, 200);
 }
 
 function stopEmitCircles() {
+  console.log("leave"); // window.clearInterval(circleIntervalId);
   // if (!isEmittingCirlces) return;
   // isEmittingCirlces = false;
 }
+
+// watch(isEmittingCircles. (value) => {
+//   if (value) {
+//     circleIntervalId = setInterval(() => {
+//       const circle = createCircle
+//     })
+//   }
+// })
 </script>
 
 <style scoped lang="scss">
@@ -163,7 +171,7 @@ function stopEmitCircles() {
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(255, 255, 0, 0.5);
+  background: rgba(180, 80, 200, 0.5);
 }
 
 // .circle {
