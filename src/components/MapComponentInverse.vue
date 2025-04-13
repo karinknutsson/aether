@@ -1,8 +1,6 @@
 <template>
   <div class="overlay" v-if="showOverlay" :style="overlayStyle"></div>
-  <!-- <div ref="circleContainer" class="circle-container"></div> -->
-  <div style="background: magenta">
-    <!-- <div class="circle"></div> -->
+  <div>
     <div ref="mapContainer" id="map" class="map-container"></div>
   </div>
 </template>
@@ -17,12 +15,10 @@ const emit = defineEmits(["hover", "blur"]);
 
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
-// const circleContainer = ref<HTMLElement | null>(null);
 let hoveredFeatureId: string | null = null;
 const x = ref(0);
 const y = ref(0);
 const showOverlay = ref(false);
-// let circleIntervalId = 0;
 
 const overlayStyle = computed(() => {
   const radius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
@@ -91,8 +87,6 @@ onMounted(() => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("mousemove", (e: any) => {
-    console.log("on enter");
-
     const features = map.queryRenderedFeatures(e.point, {
       layers: ["places"],
     });
@@ -124,7 +118,6 @@ onMounted(() => {
       map.getCanvas().style.cursor = "";
       popup.remove();
       emit("blur");
-      console.log("on leave");
     }
   });
 });
@@ -145,18 +138,10 @@ function onMouseMove(e: MouseEvent) {
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.99);
   pointer-events: none;
   z-index: 2000;
 }
-// .circle-container {
-//   width: 100vw;
-//   height: 100vh;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   // background: rgba(180, 80, 200, 0.5);
-// }
 
 :deep(a) {
   color: $font-color;
@@ -170,6 +155,6 @@ function onMouseMove(e: MouseEvent) {
 
 .map-container {
   width: 100%;
-  height: 80vh;
+  height: 100vh;
 }
 </style>

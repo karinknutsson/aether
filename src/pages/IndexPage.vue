@@ -7,13 +7,13 @@
       <div class="red-div"></div>
     </div> -->
 
-    <div class="col-xs-1 col-sm-2"></div>
-    <div class="col-xs-10 col-sm-8">
-      <div class="map-wrapper">
-        <MapComponentInverse @hover="isFeatureHovered = true" @blur="isFeatureHovered = false" />
-      </div>
+    <!-- <div class="col-xs-1 col-sm-2"></div> -->
+    <div class="col-xs-12">
+      <!-- <div class="map-wrapper"> -->
+      <MapComponentInverse @hover="isFeatureHovered = true" @blur="isFeatureHovered = false" />
+      <!-- </div> -->
     </div>
-    <div class="col-xs-1 col-sm-2"></div>
+    <!-- <div class="col-xs-1 col-sm-2"></div> -->
 
     <CursorComponent v-if="!isFeatureHovered" />
   </q-page>
@@ -60,9 +60,9 @@ const isFeatureHovered = ref(false);
   );
 }
 
-.map-wrapper {
-  margin-top: 80px;
-}
+// .map-wrapper {
+//   margin-top: 80px;
+// }
 
 .blue-div {
   width: 320px;
