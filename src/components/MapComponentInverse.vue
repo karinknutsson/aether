@@ -1,5 +1,6 @@
 <template>
-  <div ref="circleContainer" class="circle-container"></div>
+  <div class="overlay" v-if="showOverlay" :style="overlayStyle"></div>
+  <!-- <div ref="circleContainer" class="circle-container"></div> -->
   <div style="background: magenta">
     <!-- <div class="circle"></div> -->
     <div ref="mapContainer" id="map" class="map-container"></div>
@@ -7,24 +8,39 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import mapboxgl from "mapbox-gl";
 import { features } from "./data";
 // import gsap from "gsap";
 
+const emit = defineEmits(["hover", "blur"]);
+
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
-const circleContainer = ref<HTMLElement | null>(null);
+// const circleContainer = ref<HTMLElement | null>(null);
 let hoveredFeatureId: string | null = null;
+const x = ref(0);
+const y = ref(0);
+const showOverlay = ref(false);
 // let circleIntervalId = 0;
 
+const overlayStyle = computed(() => {
+  const radius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
+  return {
+    maskImage: `radial-gradient(circle ${radius}px at ${x.value}px ${y.value}px, transparent 0%, transparent 30%, black 100%)`,
+    WebkitMaskImage: `radial-gradient(circle ${radius}px at ${x.value}px ${y.value}px, transparent 0%, transparent 30%, black 100%)`,
+  };
+});
+
 onMounted(() => {
+  window.addEventListener("mousemove", onMouseMove);
+
   const map = new mapboxgl.Map({
     container: "map",
     // blue monochrome
-    // style: "mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj",
+    style: "mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj",
     // lavender-blue
-    style: "mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk",
+    // style: "mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk",
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? "",
@@ -60,10 +76,10 @@ onMounted(() => {
       source: "places",
       paint: {
         // "circle-color": "transparent",
-        "circle-color": "white",
+        "circle-color": "rgba(255, 255, 255, 0.5)",
         "circle-radius": 32,
-        "circle-stroke-width": 8,
-        "circle-stroke-color": "rgba(255, 255, 255, 0)",
+        // "circle-stroke-width": 8,
+        // "circle-stroke-color": "rgba(255, 255, 255, 0)",
       },
     });
   });
@@ -75,11 +91,14 @@ onMounted(() => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("mousemove", (e: any) => {
+    console.log("on enter");
+
     const features = map.queryRenderedFeatures(e.point, {
       layers: ["places"],
     });
 
     if (features.length > 0) {
+      showOverlay.value = true;
       const feature = features[0];
 
       if (hoveredFeatureId !== feature.id) {
@@ -97,31 +116,48 @@ onMounted(() => {
 
         popup.setLngLat(coordinates).setHTML(description).addTo(map);
       }
+
+      emit("hover");
     } else if (hoveredFeatureId !== null) {
+      showOverlay.value = false;
       hoveredFeatureId = null;
       map.getCanvas().style.cursor = "";
       popup.remove();
+      emit("blur");
+      console.log("on leave");
     }
   });
 });
+
+onUnmounted(() => {
+  window.removeEventListener("mousemove", onMouseMove);
+});
+
+function onMouseMove(e: MouseEvent) {
+  if (!showOverlay.value) return;
+
+  x.value = e.clientX;
+  y.value = e.clientY;
+}
 </script>
 
 <style scoped lang="scss">
-.circle-container {
-  width: 100vw;
-  height: 100vh;
+.overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(180, 80, 200, 0.5);
+  inset: 0;
+  background: rgba(255, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 2000;
 }
-
-// .circle {
-//   background: magenta;
-//   border-radius: 50%;
+// .circle-container {
+//   width: 100vw;
+//   height: 100vh;
 //   position: absolute;
-//   z-index: 10000;
+//   top: 0;
+//   left: 0;
+//   // background: rgba(180, 80, 200, 0.5);
 // }
+
 :deep(a) {
   color: $font-color;
   text-decoration: none;
