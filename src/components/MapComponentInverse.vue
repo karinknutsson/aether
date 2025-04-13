@@ -34,28 +34,28 @@ onMounted(() => {
   const map = new mapboxgl.Map({
     container: "map",
     // blue monochrome
-    style: "mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj",
+    // style: "mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj",
     // lavender-blue
     // style: "mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk",
+    // purple-cyan
+    style: "mapbox://styles/karinmiriam/cm9fidicg00jb01sb44f3fewt",
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? "",
   });
 
-  //   features.forEach((feature) => {
-  //     new mapboxgl.Marker({ element: createCustomMarker() })
-  //       .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
-  //       .addTo(map);
-  //   });
+  features.forEach((feature) => {
+    new mapboxgl.Marker({ element: createCustomMarker() })
+      .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
+      .addTo(map);
+  });
 
-  //   function createCustomMarker() {
-  //     const markerElement = document.createElement("div");
-  //     markerElement.style.backgroundImage = "url(/blue-pin.png)";
-  //     markerElement.style.backgroundSize = "contain";
-  //     markerElement.style.width = "24px";
-  //     markerElement.style.height = "48px";
-  //     return markerElement;
-  //   }
+  function createCustomMarker() {
+    const markerElement = document.createElement("div");
+    markerElement.className = "prime-icon-marker";
+    markerElement.innerHTML = `<div style="transform: rotate(-90deg) translate(-2px, 2px);"><i class="pi pi-sparkles" style="font-size: 36px; color: white;"></i></div>`;
+    return markerElement;
+  }
 
   map.on("style.load", () => {
     map.addSource("places", {
@@ -71,11 +71,9 @@ onMounted(() => {
       type: "circle",
       source: "places",
       paint: {
-        // "circle-color": "transparent",
-        "circle-color": "rgba(255, 255, 255, 0.5)",
-        "circle-radius": 32,
-        // "circle-stroke-width": 8,
-        // "circle-stroke-color": "rgba(255, 255, 255, 0)",
+        "circle-color": "transparent",
+        // "circle-color": "rgba(255, 255, 255, 0.5)",
+        "circle-radius": 22,
       },
     });
   });
@@ -135,10 +133,14 @@ function onMouseMove(e: MouseEvent) {
 </script>
 
 <style scoped lang="scss">
+.marker-wrapper {
+  transform: rotate(-45deg);
+  background: magenta;
+}
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.99);
+  background: rgba(255, 255, 255, 0.67);
   pointer-events: none;
   z-index: 2000;
 }
