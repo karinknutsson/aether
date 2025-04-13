@@ -147,10 +147,6 @@ function onMouseMove(e: MouseEvent) {
 </script>
 
 <style scoped lang="scss">
-.marker-wrapper {
-  transform: rotate(-45deg);
-  background: magenta;
-}
 .overlay {
   position: absolute;
   inset: 0;
