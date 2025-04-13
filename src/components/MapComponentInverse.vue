@@ -38,7 +38,7 @@ onMounted(() => {
     // lavender-blue
     // style: "mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk",
     // purple-cyan
-    style: "mapbox://styles/karinmiriam/cm9fidicg00jb01sb44f3fewt",
+    style: "mapbox://styles/karinmiriam/cm9fipg9v00ks01s4dhw089bb",
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? "",
@@ -53,7 +53,12 @@ onMounted(() => {
   function createCustomMarker() {
     const markerElement = document.createElement("div");
     markerElement.className = "prime-icon-marker";
-    markerElement.innerHTML = `<div style="transform: rotate(-90deg) translate(-2px, 2px);"><i class="pi pi-sparkles" style="font-size: 36px; color: white;"></i></div>`;
+    // markerElement.innerHTML = `<div style="background: radial-gradient(circle,rgba(44, 41, 74, 1) 0%, rgba(44, 41, 74, 0) 80%);; transform: rotate(-90deg) translate(-2px, 2px);"><i class="pi pi-sparkles" style="font-size: 36px; color: #e8e78e;"></i></div>`;
+    markerElement.innerHTML = `
+      <div style="transform: rotate(${Math.random() * 20 - 10}deg)">
+        <i class="pi pi-thumbtack" style="font-size: 24px; color: #0d122e;"></i>
+      </div>
+      `;
     return markerElement;
   }
 
