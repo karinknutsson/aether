@@ -54,9 +54,18 @@ onMounted(() => {
     const markerElement = document.createElement("div");
     markerElement.className = "prime-icon-marker";
     // markerElement.innerHTML = `<div style="background: radial-gradient(circle,rgba(44, 41, 74, 1) 0%, rgba(44, 41, 74, 0) 80%);; transform: rotate(-90deg) translate(-2px, 2px);"><i class="pi pi-sparkles" style="font-size: 36px; color: #e8e78e;"></i></div>`;
+    // markerElement.innerHTML = `
+    //   <div style="transform: rotate(${Math.random() * 20 - 10}deg)">
+    //     <i class="pi pi-thumbtack" style="font-size: 24px; color: #0a123d;"></i>
+    //   </div>
+    //   `;
     markerElement.innerHTML = `
-      <div style="transform: rotate(${Math.random() * 20 - 10}deg)">
-        <i class="pi pi-thumbtack" style="font-size: 24px; color: #0d122e;"></i>
+      <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
+        <div style="display: flex; gap: 4px">
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
+        </div>
       </div>
       `;
     return markerElement;
@@ -78,7 +87,7 @@ onMounted(() => {
       paint: {
         "circle-color": "transparent",
         // "circle-color": "rgba(255, 255, 255, 0.5)",
-        "circle-radius": 22,
+        "circle-radius": 18,
       },
     });
   });
