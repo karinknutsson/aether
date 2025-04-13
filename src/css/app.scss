@@ -1,14 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Peta:wght@100..900&display=swap');
-@import 'mapbox-gl/dist/mapbox-gl.css';
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Peta:wght@100..900&display=swap");
+@import "mapbox-gl/dist/mapbox-gl.css";
 
 body {
   background-color: $body-bg;
+  overflow: hidden;
 }
 
-h1.logo {
-  font-family: 'Lexend Peta', sans-serif;
+.logo {
+  font-family: "Lexend Peta", sans-serif;
   font-weight: 600;
   font-size: 80px;
   color: $deep-blue;
   margin: 0;
+}
+
+.antenna {
+  font-family: "Lexend Peta", sans-serif;
+  font-weight: 600;
+  font-size: 120px;
+  color: $deep-blue;
+  margin: 0;
+  transform: rotate(180deg);
 }
