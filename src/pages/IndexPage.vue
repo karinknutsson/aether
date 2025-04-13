@@ -8,7 +8,7 @@
 
     <div class="col-xs-1 col-sm-2"></div>
     <div class="col-xs-10 col-sm-8">
-      <div class="map-wrapper"><MapComponent /></div>
+      <div class="map-wrapper"><MapComponentInverse /></div>
     </div>
     <div class="col-xs-1 col-sm-2"></div>
 
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import MapComponent from "src/components/MapComponent.vue";
+import MapComponentInverse from "src/components/MapComponentInverse.vue";
 import CursorComponent from "src/components/CursorComponent.vue";
 </script>
 
