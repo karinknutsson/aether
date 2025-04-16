@@ -1,5 +1,6 @@
 <template>
-  <div class="navbar-container"><h1 class="logo">ÆtHER</h1></div>
+  <!-- <div class="navbar-container"><h1 class="logo">ÆtHER</h1></div> -->
+  <div class="navbar-container"><h1 class="logo">ÆTHER</h1></div>
 </template>
 
 <script setup lang="ts"></script>

@@ -95,6 +95,8 @@ onMounted(() => {
   const popup = new mapboxgl.Popup({
     closeButton: false,
     closeOnClick: false,
+    // anchor: 'bottom', // doesn't matter much here
+    className: "no-tip",
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,8 +121,11 @@ onMounted(() => {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
           }
         }
-
-        popup.setLngLat(coordinates).setHTML(description).addTo(map);
+        // console.log(coordinates);
+        const pixel = { x: 200, y: 150 }; // example screen position
+        const lngLat = map.unproject([pixel.x, pixel.y]);
+        // popup.setLngLat(coordinates).setHTML(description).addTo(map);
+        popup.setLngLat(lngLat).setHTML(description).addTo(map);
       }
 
       emit("hover");
@@ -168,5 +173,13 @@ function onMouseMove(e: MouseEvent) {
 .map-container {
   width: 100%;
   height: 100vh;
+}
+
+:deep(.mapboxgl-popup.no-tip) {
+  z-index: 3000;
+}
+
+:deep(.mapboxgl-popup.no-tip .mapboxgl-popup-tip) {
+  display: none;
 }
 </style>
