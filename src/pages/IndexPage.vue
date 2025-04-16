@@ -5,6 +5,8 @@
     </div>
 
     <CursorComponent v-if="!isFeatureHovered" />
+
+    <NavBar />
   </q-page>
 </template>
 
@@ -12,6 +14,7 @@
 import { ref } from "vue";
 import MapComponentInverse from "src/components/MapComponentInverse.vue";
 import CursorComponent from "src/components/CursorComponent.vue";
+import NavBar from "src/components/NavBar.vue";
 
 const isFeatureHovered = ref(false);
 </script>
