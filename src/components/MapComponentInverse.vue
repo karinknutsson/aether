@@ -3,6 +3,9 @@
   <div>
     <div ref="mapContainer" id="map" class="map-container"></div>
   </div>
+
+  <!-- <PopupComponent :popup="popup" /> -->
+  <PopupComponent v-if="showPopup" :popup="popup" />
 </template>
 
 <script setup lang="ts">
@@ -10,6 +13,8 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import mapboxgl from "mapbox-gl";
 import { features } from "./data";
 // import gsap from "gsap";
+import PopupComponent from "./PopupComponent.vue";
+import type Popup from "./popup.interface";
 
 const emit = defineEmits(["hover", "blur"]);
 
@@ -19,6 +24,8 @@ let hoveredFeatureId: string | null = null;
 const x = ref(0);
 const y = ref(0);
 const showOverlay = ref(false);
+const showPopup = ref(false);
+const popup = ref<Popup>({ title: "", attachments: [], x: 0, y: 0 });
 
 const overlayStyle = computed(() => {
   const radius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
@@ -33,10 +40,6 @@ onMounted(() => {
 
   const map = new mapboxgl.Map({
     container: "map",
-    // blue monochrome
-    // style: "mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj",
-    // lavender-blue
-    // style: "mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk",
     // purple-cyan
     style: "mapbox://styles/karinmiriam/cm9fipg9v00ks01s4dhw089bb",
     zoom: 12,
@@ -53,12 +56,6 @@ onMounted(() => {
   function createCustomMarker() {
     const markerElement = document.createElement("div");
     markerElement.className = "prime-icon-marker";
-    // markerElement.innerHTML = `<div style="background: radial-gradient(circle,rgba(44, 41, 74, 1) 0%, rgba(44, 41, 74, 0) 80%);; transform: rotate(-90deg) translate(-2px, 2px);"><i class="pi pi-sparkles" style="font-size: 36px; color: #e8e78e;"></i></div>`;
-    // markerElement.innerHTML = `
-    //   <div style="transform: rotate(${Math.random() * 20 - 10}deg)">
-    //     <i class="pi pi-thumbtack" style="font-size: 24px; color: #0a123d;"></i>
-    //   </div>
-    //   `;
     markerElement.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
         <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
@@ -92,15 +89,15 @@ onMounted(() => {
     });
   });
 
-  const popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-    // anchor: 'bottom', // doesn't matter much here
-    className: "no-tip",
-  });
+  // const popup = new mapboxgl.Popup({
+  //   closeButton: false,
+  //   closeOnClick: false,
+  //   className: "no-tip",
+  // });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("mousemove", (e: any) => {
+    // console.log(e);
     const features = map.queryRenderedFeatures(e.point, {
       layers: ["places"],
     });
@@ -113,27 +110,47 @@ onMounted(() => {
         hoveredFeatureId = feature.id;
         map.getCanvas().style.cursor = "pointer";
 
-        const coordinates = feature.geometry.coordinates.slice();
-        const description = feature.properties.description;
+        // const coordinates = feature.geometry.coordinates.slice();
+        // const description = feature.properties.description;
 
-        if (["mercator", "equirectangular"].includes(map.getProjection().name)) {
-          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-          }
-        }
+        // if (["mercator", "equirectangular"].includes(map.getProjection().name)) {
+        //   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        //   }
+        // }
         // console.log(coordinates);
-        const pixel = { x: 200, y: 150 }; // example screen position
-        const lngLat = map.unproject([pixel.x, pixel.y]);
+
+        showPopup.value = true;
+
+        let xPopup;
+
+        if (e.point.x > window.innerWidth / 2) {
+          xPopup = window.innerWidth / 4;
+        } else {
+          xPopup = 3 * (window.innerWidth / 4);
+        }
+
+        const yPopup = window.innerHeight * 0.25;
+
+        popup.value = {
+          title: feature.properties.description,
+          attachments: feature.properties.attachments,
+          x: xPopup,
+          y: yPopup,
+        };
+        // const pixel = { x, y };
+        // const lngLat = map.unproject([pixel.x, pixel.y]);
         // popup.setLngLat(coordinates).setHTML(description).addTo(map);
-        popup.setLngLat(lngLat).setHTML(description).addTo(map);
+        // popup.setLngLat(lngLat).setHTML(description).addTo(map);
       }
 
       emit("hover");
     } else if (hoveredFeatureId !== null) {
       showOverlay.value = false;
+      showPopup.value = false;
       hoveredFeatureId = null;
       map.getCanvas().style.cursor = "";
-      popup.remove();
+      // popup.remove();
       emit("blur");
     }
   });
@@ -152,6 +169,13 @@ function onMouseMove(e: MouseEvent) {
 </script>
 
 <style scoped lang="scss">
+:deep(h2) {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 100%;
+}
+
 .overlay {
   position: absolute;
   inset: 0;
@@ -177,6 +201,13 @@ function onMouseMove(e: MouseEvent) {
 
 :deep(.mapboxgl-popup.no-tip) {
   z-index: 3000;
+}
+
+:deep(.mapboxgl-popup.no-tip) {
+  max-width: none !important;
+  max-height: none !important;
+  width: 500px !important;
+  height: 500px !important;
 }
 
 :deep(.mapboxgl-popup.no-tip .mapboxgl-popup-tip) {

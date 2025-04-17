@@ -5,6 +5,7 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Soviet War Memorial Treptow",
+      attachments: [],
     },
     geometry: {
       type: "Point",
@@ -15,6 +16,7 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Grunewald",
+      attachments: [],
     },
     geometry: {
       type: "Point",
@@ -25,6 +27,7 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Tiergarten",
+      attachments: [],
     },
     geometry: {
       type: "Point",
@@ -35,6 +38,7 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Volkspark Prenzlauer Berg",
+      attachments: [],
     },
     geometry: {
       type: "Point",
