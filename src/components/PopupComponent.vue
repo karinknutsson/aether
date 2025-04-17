@@ -45,20 +45,20 @@ img {
   //   background: rgba(255, 255, 255, 0.01);
   //   background: transparent;
   //   border: 1px solid rgba(255, 255, 255, 0.2);
-  //   background: white;
-  width: 480px;
-  height: 480px;
+  background: white;
+  width: 350px;
+  height: 420px;
   z-index: 50000;
   top: v-bind(popupTop);
   left: v-bind(popupLeft);
   //   border-radius: 50%;
-  border-radius: 12px;
-  backdrop-filter: blur(20px);
-  padding: 24px;
+  //   border-radius: 12px;
+  //   backdrop-filter: blur(20px);
+  padding: 26px 0 0 0;
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
-  background: radial-gradient(circle, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.7) 100%);
+  //   background: radial-gradient(circle, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.7) 100%);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   //   opacity: 0.8;
 }
