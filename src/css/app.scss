@@ -1,9 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Lexend+Peta:wght@100..900&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Lexend+Peta:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend+Giga:wght@100..900&family=Lexend+Peta:wght@100..900&family=Lexend:wght@100..900&display=swap");
 @import "mapbox-gl/dist/mapbox-gl.css";
 
 body {
   background-color: $body-bg;
   overflow: hidden;
+  font-family: "Lexend", sans-serif;
+  color: $deep-blue;
+}
+
+h2 {
+  font-family: "Lexend Deca", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 100%;
+  margin: 0;
 }
 
 .logo {

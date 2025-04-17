@@ -125,9 +125,9 @@ onMounted(() => {
         let xPopup;
 
         if (e.point.x > window.innerWidth / 2) {
-          xPopup = window.innerWidth / 4;
+          xPopup = window.innerWidth / 4 - 240;
         } else {
-          xPopup = 3 * (window.innerWidth / 4);
+          xPopup = 3 * (window.innerWidth / 4) - 240;
         }
 
         const yPopup = window.innerHeight * 0.25;
@@ -169,12 +169,12 @@ function onMouseMove(e: MouseEvent) {
 </script>
 
 <style scoped lang="scss">
-:deep(h2) {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-  line-height: 100%;
-}
+// :deep(h2) {
+//   font-size: 24px;
+//   font-weight: 600;
+//   margin: 0;
+//   line-height: 100%;
+// }
 
 .overlay {
   position: absolute;
@@ -199,18 +199,18 @@ function onMouseMove(e: MouseEvent) {
   height: 100vh;
 }
 
-:deep(.mapboxgl-popup.no-tip) {
-  z-index: 3000;
-}
+// :deep(.mapboxgl-popup.no-tip) {
+//   z-index: 3000;
+// }
 
-:deep(.mapboxgl-popup.no-tip) {
-  max-width: none !important;
-  max-height: none !important;
-  width: 500px !important;
-  height: 500px !important;
-}
+// :deep(.mapboxgl-popup.no-tip) {
+//   max-width: none !important;
+//   max-height: none !important;
+//   width: 500px !important;
+//   height: 500px !important;
+// }
 
-:deep(.mapboxgl-popup.no-tip .mapboxgl-popup-tip) {
-  display: none;
-}
+// :deep(.mapboxgl-popup.no-tip .mapboxgl-popup-tip) {
+//   display: none;
+// }
 </style>
