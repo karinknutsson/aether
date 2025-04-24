@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="popup" class="popup-container" style="{top: popup.y + 'px', left: popup.x + 'px'}">
+      <button class="close-button" @click="emit('close')"><i class="pi pi-times icon"></i></button>
       <!-- <h2>{{ popup.title }}</h2> -->
       <!-- <img src="example-images/merzouga.jpg" width="200" height="200" /> -->
       <ImageFader :images="popup.attachments" :title="popup.title" />
@@ -20,6 +21,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["close"]);
+
 const popupTop = computed(() => {
   return props.popup?.y + "px";
 });
@@ -32,6 +35,19 @@ const popupLeft = computed(() => {
 <style scoped lang="scss">
 img {
   filter: grayscale(100%);
+}
+
+.close-button {
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #909090;
+
+  i {
+    font-size: 24px;
+  }
 }
 
 .popup-container {

@@ -14,5 +14,8 @@
   width: 100vw;
   height: 100px;
   padding: 0 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
