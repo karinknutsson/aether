@@ -97,7 +97,6 @@ onMounted(() => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("mousemove", (e: any) => {
-    // console.log(e);
     const features = map.queryRenderedFeatures(e.point, {
       layers: ["places"],
     });
@@ -109,16 +108,6 @@ onMounted(() => {
       if (hoveredFeatureId !== feature.id) {
         hoveredFeatureId = feature.id;
         map.getCanvas().style.cursor = "pointer";
-
-        // const coordinates = feature.geometry.coordinates.slice();
-        // const description = feature.properties.description;
-
-        // if (["mercator", "equirectangular"].includes(map.getProjection().name)) {
-        //   while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        //   }
-        // }
-        // console.log(coordinates);
 
         showPopup.value = true;
 
@@ -132,16 +121,17 @@ onMounted(() => {
 
         const yPopup = window.innerHeight * 0.25;
 
+        const attachments = JSON.parse(feature.properties.attachments);
+
+        console.log(attachments);
+        console.log(typeof attachments);
+
         popup.value = {
           title: feature.properties.description,
-          attachments: feature.properties.attachments,
+          attachments: attachments,
           x: xPopup,
           y: yPopup,
         };
-        // const pixel = { x, y };
-        // const lngLat = map.unproject([pixel.x, pixel.y]);
-        // popup.setLngLat(coordinates).setHTML(description).addTo(map);
-        // popup.setLngLat(lngLat).setHTML(description).addTo(map);
       }
 
       emit("hover");

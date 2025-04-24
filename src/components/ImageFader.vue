@@ -3,6 +3,7 @@
     <div v-if="images.length" class="img-container">
       <div v-for="(image, index) in images" :key="image" class="img-wrapper">
         <img :src="image" :class="`image-${index}`" />
+        <h2>{{ title }}</h2>
       </div>
     </div>
   </div>
@@ -15,6 +16,10 @@ import gsap from "gsap";
 const props = defineProps({
   images: {
     type: Array as PropType<string[]>,
+    required: true,
+  },
+  title: {
+    type: String,
     required: true,
   },
 });

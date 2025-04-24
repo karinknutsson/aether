@@ -3,13 +3,13 @@
     <div v-if="popup" class="popup-container" style="{top: popup.y + 'px', left: popup.x + 'px'}">
       <!-- <h2>{{ popup.title }}</h2> -->
       <!-- <img src="example-images/merzouga.jpg" width="200" height="200" /> -->
-      <ImageFader :images="images" />
+      <ImageFader :images="popup.attachments" :title="popup.title" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref } from "vue";
+import { PropType, computed } from "vue";
 import type Popup from "./popup.interface";
 import ImageFader from "./ImageFader.vue";
 
@@ -19,12 +19,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-const images = ref([
-  "example-images/merzouga.jpg",
-  "example-images/chellah-storks.jpg",
-  "example-images/meknes-medina.jpg",
-]);
 
 const popupTop = computed(() => {
   return props.popup?.y + "px";
