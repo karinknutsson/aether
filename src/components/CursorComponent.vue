@@ -12,6 +12,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const x = ref(0);
 const y = ref(0);
@@ -24,12 +27,20 @@ const isMoving = ref(false);
 let lastMoveTime = performance.now();
 
 onMounted(() => {
-  window.addEventListener("mousemove", onMouseMove);
-  animate();
+  if (!$q.platform.is.mobile) {
+    window.addEventListener("mousemove", onMouseMove);
+    animate();
+  } else {
+    x.value = window.innerWidth / 2;
+    y.value = window.innerHeight / 2;
+    animate();
+  }
 });
 
 onUnmounted(() => {
-  window.removeEventListener("mousemove", onMouseMove);
+  if (!$q.platform.is.mobile) {
+    window.removeEventListener("mousemove", onMouseMove);
+  }
 });
 
 function onMouseMove(e: MouseEvent) {
