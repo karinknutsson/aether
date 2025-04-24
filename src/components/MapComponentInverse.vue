@@ -120,11 +120,7 @@ onMounted(() => {
         }
 
         const yPopup = window.innerHeight * 0.25;
-
         const attachments = JSON.parse(feature.properties.attachments);
-
-        console.log(attachments);
-        console.log(typeof attachments);
 
         popup.value = {
           title: feature.properties.description,
