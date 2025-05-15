@@ -1,7 +1,7 @@
 <template>
   <q-page class="row">
     <div class="col-xs-12">
-      <MapComponentInverse @hover="isFeatureHovered = true" @blur="isFeatureHovered = false" />
+      <MapComponent @hover="isFeatureHovered = true" @blur="isFeatureHovered = false" />
     </div>
 
     <CursorComponent v-if="!isFeatureHovered" />
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import MapComponentInverse from "src/components/MapComponentInverse.vue";
+import MapComponent from "src/components/MapComponent.vue";
 import CursorComponent from "src/components/CursorComponent.vue";
 import NavBar from "src/components/NavBar.vue";
 

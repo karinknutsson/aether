@@ -1,35 +1,49 @@
 <template>
-  <div ref="circleContainer" class="circle-container"></div>
-  <div style="background: magenta">
-    <!-- <div class="circle"></div> -->
+  <div class="overlay" v-if="showOverlay" :style="overlayStyle"></div>
+  <div>
     <div ref="mapContainer" id="map" class="map-container"></div>
   </div>
+
+  <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import mapboxgl from "mapbox-gl";
 import { features } from "./data";
-import gsap from "gsap";
+import PopupComponent from "./PopupComponent.vue";
+import type Popup from "./popup.interface";
+import { useQuasar } from "quasar";
 
-let isEmittingCircles = false;
+const $q = useQuasar();
+
+const emit = defineEmits(["hover", "blur"]);
+
+let map: any;
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
-const circleContainer = ref<HTMLElement | null>(null);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let circleIntervalId = 0;
+let hoveredFeatureId: string | null = null;
+const x = ref(0);
+const y = ref(0);
+const showOverlay = ref(false);
+const showPopup = ref(false);
+const popup = ref<Popup>({ title: "", attachments: [] });
+
+const overlayStyle = computed(() => {
+  const radius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
+  return {
+    maskImage: `radial-gradient(circle ${radius}px at ${x.value}px ${y.value}px, transparent 0%, transparent 30%, black 100%)`,
+    WebkitMaskImage: `radial-gradient(circle ${radius}px at ${x.value}px ${y.value}px, transparent 0%, transparent 30%, black 100%)`,
+  };
+});
 
 onMounted(() => {
-  const map = new mapboxgl.Map({
+  window.addEventListener("mousemove", onMouseDown);
+
+  map = new mapboxgl.Map({
     container: "map",
-    // frank
-    // style: 'mapbox://styles/karinmiriam/cko88xcgl4vju18pgby8zpan6',
-    // aetheric
-    style: "mapbox://styles/karinmiriam/cm915r01k009b01s457lv403i",
-    // blue monochrome
-    // style: 'mapbox://styles/karinmiriam/cm914x1qt007l01s71104agcj',
-    // lavender-blue
-    // style: 'mapbox://styles/karinmiriam/cm91fgjqb009v01qs2kekesxk',
+    // purple-cyan
+    style: "mapbox://styles/karinmiriam/cm9fipg9v00ks01s4dhw089bb",
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? "",
@@ -43,10 +57,16 @@ onMounted(() => {
 
   function createCustomMarker() {
     const markerElement = document.createElement("div");
-    markerElement.style.backgroundImage = "url(/blue-pin.png)";
-    markerElement.style.backgroundSize = "contain";
-    markerElement.style.width = "24px";
-    markerElement.style.height = "48px";
+    markerElement.className = "prime-icon-marker";
+    markerElement.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
+        <div style="display: flex; gap: 4px">
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
+        </div>
+      </div>
+      `;
     return markerElement;
   }
 
@@ -65,121 +85,72 @@ onMounted(() => {
       source: "places",
       paint: {
         "circle-color": "transparent",
-        "circle-radius": 32,
+        "circle-radius": 18,
       },
     });
   });
 
-  const popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-  });
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  map.on("mouseenter", "places", (e: any) => {
-    // console.log(e);
-    map.getCanvas().style.cursor = "pointer";
+  map.on("mousedown", (e: any) => {
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: ["places"],
+    });
 
-    const coordinates = e.features[0].geometry.coordinates.slice();
-    const description = e.features[0].properties.description;
+    if (features.length > 0) {
+      showOverlay.value = true;
+      const feature = features[0];
 
-    if (["mercator", "equirectangular"].includes(map.getProjection().name)) {
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      if (hoveredFeatureId !== feature.id) {
+        hoveredFeatureId = feature.id;
+        map.getCanvas().style.cursor = "pointer";
+
+        showPopup.value = true;
+
+        const attachments = JSON.parse(feature.properties.attachments);
+
+        popup.value = {
+          title: feature.properties.description,
+          attachments: attachments,
+        };
       }
+
+      emit("hover");
+    } else if (hoveredFeatureId !== null) {
+      hidePopup();
     }
-
-    popup.setLngLat(coordinates).setHTML(description).addTo(map);
-
-    startEmitCircles(e.originalEvent.pageX, e.originalEvent.pageY);
-  });
-
-  map.on("mouseleave", "places", () => {
-    map.getCanvas().style.cursor = "";
-    popup.remove();
-    stopEmitCircles();
   });
 });
 
-function createCircle(x: number, y: number) {
-  const circle = document.createElement("div");
-  circle.classList.add("circle");
-  circle.style.width = "10px";
-  circle.style.height = "10px";
-  circle.style.top = `${y}px`;
-  circle.style.left = `${x}px`;
-  circle.style.border = "1px solid white";
-  circle.style.backgroundColor = "transparent";
-  circle.style.borderRadius = "50%";
-  circle.style.opacity = "1";
-  circle.style.zIndex = "50000";
-  circle.style.position = "absolute";
-  return circle;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function hidePopup() {
+  showOverlay.value = false;
+  showPopup.value = false;
+  hoveredFeatureId = null;
+  map.getCanvas().style.cursor = "";
+  emit("blur");
 }
 
-function growCircle(circle: HTMLElement) {
-  const maxSize = 600;
+onUnmounted(() => {
+  window.removeEventListener("mousedown", onMouseDown);
+});
 
-  gsap.to(circle, {
-    width: `${maxSize}px`,
-    height: `${maxSize}px`,
-    x: `-=${maxSize / 2}px`,
-    y: `-=${maxSize / 2}px`,
-    duration: 4,
-    ease: "none",
-    opacity: 0,
-  });
+function onMouseDown(e: MouseEvent) {
+  if (!showOverlay.value) return;
+
+  x.value = e.clientX;
+  y.value = e.clientY;
 }
-
-function startEmitCircles(x: number, y: number) {
-  if (isEmittingCircles) return;
-
-  isEmittingCircles = true;
-  emitCircles(x, y);
-}
-
-function emitCircles(x: number, y: number) {
-  circleIntervalId = window.setInterval(() => {
-    const circle = createCircle(x, y);
-
-    if (circleContainer.value) {
-      circleContainer.value.appendChild(circle);
-      growCircle(circle);
-    }
-  }, 200);
-}
-
-function stopEmitCircles() {
-  console.log("leave"); // window.clearInterval(circleIntervalId);
-  // if (!isEmittingCirlces) return;
-  // isEmittingCirlces = false;
-}
-
-// watch(isEmittingCircles. (value) => {
-//   if (value) {
-//     circleIntervalId = setInterval(() => {
-//       const circle = createCircle
-//     })
-//   }
-// })
 </script>
 
 <style scoped lang="scss">
-.circle-container {
-  width: 100vw;
-  height: 100vh;
+.overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(180, 80, 200, 0.5);
+  inset: 0;
+  background: rgba(255, 255, 255, 0.67);
+  pointer-events: none;
+  z-index: 2000;
 }
 
-// .circle {
-//   background: magenta;
-//   border-radius: 50%;
-//   position: absolute;
-//   z-index: 10000;
-// }
 :deep(a) {
   color: $font-color;
   text-decoration: none;
@@ -192,6 +163,6 @@ function stopEmitCircles() {
 
 .map-container {
   width: 100%;
-  height: 80vh;
+  height: 100vh;
 }
 </style>

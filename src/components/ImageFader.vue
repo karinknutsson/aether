@@ -70,10 +70,7 @@ function animate() {
 
 <style scoped lang="scss">
 img {
-  // filter: grayscale(100%) sepia(100%) hue-rotate(200deg) saturate(160%);
   filter: grayscale(100%) sepia(33%) hue-rotate(200deg) saturate(160%);
-  // filter: grayscale(60%) sepia(20%) hue-rotate(190deg) saturate(130%) brightness(1.1);
-  // filter: contrast(0.9) brightness(1.05) sepia(0.3) saturate(1.2) hue-rotate(-10deg);
 }
 
 .img-container {
@@ -90,7 +87,6 @@ img {
 
   img {
     width: 100%;
-    // height: 100%;
     object-fit: cover;
   }
 }

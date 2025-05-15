@@ -4,7 +4,6 @@
     <div ref="mapContainer" id="map" class="map-container"></div>
   </div>
 
-  <!-- <PopupComponent :popup="popup" /> -->
   <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
 </template>
 
@@ -12,7 +11,6 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import mapboxgl from "mapbox-gl";
 import { features } from "./data";
-// import gsap from "gsap";
 import PopupComponent from "./PopupComponent.vue";
 import type Popup from "./popup.interface";
 import { useQuasar } from "quasar";
