@@ -107,6 +107,6 @@ const popupLeft = computed(() => {
   justify-content: flex-start;
   width: 100vw;
   max-width: 900px;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
 }
 </style>
