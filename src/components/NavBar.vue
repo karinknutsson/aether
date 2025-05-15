@@ -1,6 +1,4 @@
 <template>
-  <!-- <div class="navbar-container"><h1 class="logo">ÆtHER</h1></div> -->
-  <!-- <div class="navbar-container"><h1 class="logo">æther</h1></div> -->
   <div class="navbar-container">
     <span class="meddon-capital">æ</span><span class="meddon-lowercase">ther</span>
   </div>

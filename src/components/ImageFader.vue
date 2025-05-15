@@ -2,7 +2,9 @@
   <div v-if="images.length" class="img-container">
     <div v-for="(image, index) in images" :key="image" class="img-wrapper">
       <img :src="image" :class="`image-${index}`" />
-      <!-- <h2>{{ title }}</h2> -->
+    </div>
+    <div class="title-wrapper">
+      <h2>{{ title }}</h2>
     </div>
   </div>
 </template>
@@ -82,13 +84,21 @@ img {
 .img-wrapper {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 40px);
   overflow: hidden;
 
   img {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     object-fit: cover;
   }
+}
+
+.title-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
 </style>
