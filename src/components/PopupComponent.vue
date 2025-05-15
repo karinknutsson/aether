@@ -1,10 +1,23 @@
 <template>
-  <div>
-    <div v-if="popup" class="popup-container" style="{top: popup.y + 'px', left: popup.x + 'px'}">
-      <button class="close-button" @click="emit('close')"><i class="pi pi-times icon"></i></button>
+  <div v-if="$q.screen.gt.sm">
+    <div
+      v-if="popup"
+      class="popup-container"
+      :style="{ top: popup.y + 'px', left: popup.x + 'px' }"
+    >
+      <button class="close-button flex-center" @click="emit('close')">
+        <i class="pi pi-times icon"></i>
+      </button>
       <!-- <h2>{{ popup.title }}</h2> -->
       <!-- <img src="example-images/merzouga.jpg" width="200" height="200" /> -->
       <ImageFader :images="popup.attachments" :title="popup.title" />
+    </div>
+  </div>
+  <div v-else>
+    <div v-if="popup" class="mobile-popup-container">
+      <button class="close-button flex-center" @click="emit('close')">
+        <i class="pi pi-times icon"></i></button
+      ><ImageFader :images="popup.attachments" :title="popup.title" />
     </div>
   </div>
 </template>
@@ -13,6 +26,9 @@
 import { PropType, computed } from "vue";
 import type Popup from "./popup.interface";
 import ImageFader from "./ImageFader.vue";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const props = defineProps({
   popup: {
@@ -33,20 +49,19 @@ const popupLeft = computed(() => {
 </script>
 
 <style scoped lang="scss">
-img {
-  filter: grayscale(100%);
-}
-
 .close-button {
   background: transparent;
   border: 0;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   color: #909090;
+  padding: 0;
+  transform: translateX(8px);
+  margin-bottom: 4px;
 
   i {
-    font-size: 24px;
+    font-size: 20px;
   }
 }
 
@@ -59,17 +74,35 @@ img {
   width: 350px;
   height: 420px;
   z-index: 50000;
-  top: v-bind(popupTop);
-  left: v-bind(popupLeft);
+  //top: v-bind(popupTop);
+  //left: v-bind(popupLeft);
   //   border-radius: 50%;
   //   border-radius: 12px;
   //   backdrop-filter: blur(20px);
-  padding: 26px 0 0 0;
+  padding: 8px 16px;
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   //   background: radial-gradient(circle, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.7) 100%);
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
   //   opacity: 0.8;
+}
+
+.mobile-popup-container {
+  position: absolute;
+  left: 0;
+  top: 10vh;
+  background: white;
+  z-index: 50000;
+  padding: 8px 16px 32px 16px;
+  box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100vw;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
 }
 </style>

@@ -33,3 +33,9 @@ h2 {
   margin: 0;
   transform: rotate(180deg);
 }
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
