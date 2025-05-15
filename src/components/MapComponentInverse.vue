@@ -4,20 +4,22 @@
     <div ref="mapContainer" id="map" class="map-container"></div>
   </div>
 
-  <!-- <PopupComponent :popup="popup" /> -->
-  <PopupComponent v-if="showPopup" :popup="popup" />
+  <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import mapboxgl from "mapbox-gl";
 import { features } from "./data";
-// import gsap from "gsap";
 import PopupComponent from "./PopupComponent.vue";
 import type Popup from "./popup.interface";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const emit = defineEmits(["hover", "blur"]);
 
+let map: any;
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
 let hoveredFeatureId: string | null = null;
@@ -36,9 +38,9 @@ const overlayStyle = computed(() => {
 });
 
 onMounted(() => {
-  window.addEventListener("mousemove", onMouseMove);
+  window.addEventListener("mousemove", onMouseDown);
 
-  const map = new mapboxgl.Map({
+  map = new mapboxgl.Map({
     container: "map",
     // purple-cyan
     style: "mapbox://styles/karinmiriam/cm9fipg9v00ks01s4dhw089bb",
@@ -83,20 +85,13 @@ onMounted(() => {
       source: "places",
       paint: {
         "circle-color": "transparent",
-        // "circle-color": "rgba(255, 255, 255, 0.5)",
         "circle-radius": 18,
       },
     });
   });
 
-  // const popup = new mapboxgl.Popup({
-  //   closeButton: false,
-  //   closeOnClick: false,
-  //   className: "no-tip",
-  // });
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  map.on("mousemove", (e: any) => {
+  map.on("mousedown", (e: any) => {
     const features = map.queryRenderedFeatures(e.point, {
       layers: ["places"],
     });
@@ -111,15 +106,23 @@ onMounted(() => {
 
         showPopup.value = true;
 
-        let xPopup;
+        let xPopup = 0;
+        let yPopup = 0;
 
-        if (e.point.x > window.innerWidth / 2) {
-          xPopup = window.innerWidth / 4 - 240;
+        if ($q.screen.gt.sm) {
+          // popup coordinates for md & larger screens
+          if (e.point.x > window.innerWidth / 2) {
+            xPopup = window.innerWidth / 4 - 240;
+          } else {
+            xPopup = 3 * (window.innerWidth / 4) - 240;
+          }
+          yPopup = window.innerHeight * 0.25;
         } else {
-          xPopup = 3 * (window.innerWidth / 4) - 240;
+          xPopup = 0;
+          yPopup = window.innerHeight * 0.3;
+          // popup coordinates for xs & sm screens
         }
 
-        const yPopup = window.innerHeight * 0.25;
         const attachments = JSON.parse(feature.properties.attachments);
 
         popup.value = {
@@ -132,21 +135,25 @@ onMounted(() => {
 
       emit("hover");
     } else if (hoveredFeatureId !== null) {
-      showOverlay.value = false;
-      showPopup.value = false;
-      hoveredFeatureId = null;
-      map.getCanvas().style.cursor = "";
-      // popup.remove();
-      emit("blur");
+      hidePopup();
     }
   });
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function hidePopup() {
+  showOverlay.value = false;
+  showPopup.value = false;
+  hoveredFeatureId = null;
+  map.getCanvas().style.cursor = "";
+  emit("blur");
+}
+
 onUnmounted(() => {
-  window.removeEventListener("mousemove", onMouseMove);
+  window.removeEventListener("mousedown", onMouseDown);
 });
 
-function onMouseMove(e: MouseEvent) {
+function onMouseDown(e: MouseEvent) {
   if (!showOverlay.value) return;
 
   x.value = e.clientX;

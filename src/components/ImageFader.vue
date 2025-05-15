@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <div v-if="images.length" class="img-container">
-      <div v-for="(image, index) in images" :key="image" class="img-wrapper">
-        <img :src="image" :class="`image-${index}`" />
-        <h2>{{ title }}</h2>
-      </div>
+  <div v-if="images.length" class="img-container">
+    <div v-for="(image, index) in images" :key="image" class="img-wrapper">
+      <img :src="image" :class="`image-${index}`" />
+    </div>
+    <div class="title-wrapper">
+      <h2>{{ title }}</h2>
     </div>
   </div>
 </template>
@@ -70,27 +70,32 @@ function animate() {
 
 <style scoped lang="scss">
 img {
-  //   filter: grayscale(100%) sepia(100%) hue-rotate(200deg) saturate(160%);
-  //   filter: grayscale(60%) sepia(20%) hue-rotate(190deg) saturate(130%) brightness(1.1);
-  filter: contrast(0.9) brightness(1.05) sepia(0.3) saturate(1.2) hue-rotate(-10deg);
+  filter: grayscale(100%) sepia(33%) hue-rotate(200deg) saturate(160%);
 }
 
 .img-container {
   position: relative;
-  width: 310px;
-  height: 310px;
+  width: 100%;
+  height: 100%;
 }
 
 .img-wrapper {
   position: absolute;
-  width: 310px;
-  height: 310px;
+  width: 100%;
+  height: calc(100% - 40px);
   overflow: hidden;
 
   img {
     width: 100%;
-    height: 100%;
     object-fit: cover;
   }
+}
+
+.title-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
 }
 </style>

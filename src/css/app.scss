@@ -1,6 +1,11 @@
-// @import url("https://fonts.googleapis.com/css2?family=Lexend+Peta:wght@100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend+Giga:wght@100..900&family=Lexend+Peta:wght@100..900&family=Lexend:wght@100..900&display=swap");
 @import "mapbox-gl/dist/mapbox-gl.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend+Giga:wght@100..900&family=Lexend+Peta:wght@100..900&family=Lexend:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Exile&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Blaka&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Astloch:wght@400;700&family=Beau+Rivage&family=Blaka&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Meddon&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=block");
 
 body {
   background-color: $body-bg;
@@ -10,26 +15,30 @@ body {
 }
 
 h2 {
-  font-family: "Lexend Deca", sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 18px;
   font-weight: 600;
   line-height: 100%;
   margin: 0;
 }
 
-.logo {
-  font-family: "Lexend Peta", sans-serif;
-  font-weight: 700;
+.meddon-capital {
+  text-transform: uppercase;
+  font-family: "Meddon", cursive;
   font-size: 56px;
-  color: $deep-blue;
+  transform: translate(17px, 32px);
   margin: 0;
 }
 
-.antenna {
-  font-family: "Lexend Peta", sans-serif;
-  font-weight: 600;
-  font-size: 120px;
-  color: $deep-blue;
+.meddon-lowercase {
+  font-family: "Meddon", cursive;
+  font-size: 56px;
+  transform: translateY(24px);
   margin: 0;
-  transform: rotate(180deg);
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
