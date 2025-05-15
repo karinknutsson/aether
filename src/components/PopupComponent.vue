@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$q.screen.gt.sm">
+  <!-- <div v-if="$q.screen.gt.sm">
     <div
       v-if="popup"
       class="popup-container"
@@ -8,16 +8,16 @@
       <button class="close-button flex-center" @click="emit('close')">
         <i class="pi pi-times icon"></i>
       </button>
-      <!-- <h2>{{ popup.title }}</h2> -->
-      <!-- <img src="example-images/merzouga.jpg" width="200" height="200" /> -->
       <ImageFader :images="popup.attachments" :title="popup.title" />
     </div>
-  </div>
-  <div v-else>
-    <div v-if="popup" class="mobile-popup-container">
-      <button class="close-button flex-center" @click="emit('close')">
-        <i class="pi pi-times icon"></i></button
-      ><ImageFader :images="popup.attachments" :title="popup.title" />
+  </div> -->
+  <div>
+    <div v-if="popup" class="mobile-popup-wrapper flex-center">
+      <div class="mobile-popup-container">
+        <button class="close-button flex-center" @click="emit('close')">
+          <i class="pi pi-times icon"></i></button
+        ><ImageFader :images="popup.attachments" :title="popup.title" />
+      </div>
     </div>
   </div>
 </template>
@@ -89,10 +89,14 @@ const popupLeft = computed(() => {
   //   opacity: 0.8;
 }
 
-.mobile-popup-container {
+.mobile-popup-wrapper {
   position: absolute;
   left: 0;
-  top: 10vh;
+  top: 20vh;
+  width: 100vw;
+}
+
+.mobile-popup-container {
   background: white;
   z-index: 50000;
   padding: 8px 16px 32px 16px;
