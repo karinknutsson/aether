@@ -1,6 +1,9 @@
 // @import url("https://fonts.googleapis.com/css2?family=Lexend+Peta:wght@100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Lexend+Giga:wght@100..900&family=Lexend+Peta:wght@100..900&family=Lexend:wght@100..900&display=swap");
 @import "mapbox-gl/dist/mapbox-gl.css";
+@import url("https://fonts.googleapis.com/css2?family=Exile&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Blaka&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Astloch:wght@400;700&family=Beau+Rivage&family=Blaka&family=Meddon&display=block");
 
 body {
   background-color: $body-bg;
@@ -17,11 +20,31 @@ h2 {
   margin: 0;
 }
 
-.logo {
-  font-family: "Lexend Peta", sans-serif;
-  font-weight: 700;
+.meddon-capital {
+  text-transform: uppercase;
+  font-family: "Meddon", cursive;
   font-size: 56px;
+  transform: translate(17px, 32px);
+  margin: 0;
+}
+
+.meddon-lowercase {
+  font-family: "Meddon", cursive;
+  font-size: 56px;
+  transform: translateY(24px);
+  margin: 0;
+}
+
+.logo {
+  font-family: "Meddon", cursive;
+  // font-weight: 700;
+  // font-weight: 400;
+  font-size: 64px;
   color: $deep-blue;
+  // text-transform: uppercase;
+  font-style: italic;
+  text-transform: capitalize;
+  transform: translateY(40px);
   margin: 0;
 }
 
