@@ -43,7 +43,9 @@ onMounted(() => {
   map = new mapboxgl.Map({
     container: "map",
     // purple-cyan
-    style: "mapbox://styles/karinmiriam/cm9fipg9v00ks01s4dhw089bb",
+    // style: "mapbox://styles/karinmiriam/cm9fipg9v00ks01s4dhw089bb",
+    // purple-cyan-raleway
+    style: "mapbox://styles/karinmiriam/cmaqslh9g00r501s90mydcred",
     zoom: 12,
     center: [13.407557, 52.509237],
     accessToken: apiKey ?? "",
