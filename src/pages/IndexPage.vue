@@ -1,12 +1,12 @@
 <template>
   <q-page class="row">
     <div class="col-xs-12">
-      <MapComponent @hover="isFeatureHovered = true" @blur="isFeatureHovered = false" />
+      <MapComponent @open-popup="isPopupOpen = true" @close-popup="isPopupOpen = false" />
     </div>
 
-    <CursorComponent v-if="!isFeatureHovered" />
+    <CursorComponent v-if="!isPopupOpen" />
 
-    <NavBar />
+    <NavBar @open-popup="isPopupOpen = true" @close-popup="isPopupOpen = false" />
   </q-page>
 </template>
 
@@ -16,7 +16,7 @@ import MapComponent from "src/components/MapComponent.vue";
 import CursorComponent from "src/components/CursorComponent.vue";
 import NavBar from "src/components/NavBar.vue";
 
-const isFeatureHovered = ref(false);
+const isPopupOpen = ref(false);
 </script>
 
 <style scoped lang="scss"></style>

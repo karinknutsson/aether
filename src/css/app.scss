@@ -34,3 +34,19 @@ h2 {
   align-items: center;
   justify-content: center;
 }
+
+.close-button {
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  color: #909090;
+  padding: 0;
+  transform: translateX(8px);
+  margin-bottom: 4px;
+
+  i {
+    font-size: 20px;
+  }
+}

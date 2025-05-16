@@ -17,7 +17,7 @@ import { useQuasar } from "quasar";
 
 const $q = useQuasar();
 
-const emit = defineEmits(["hover", "blur"]);
+const emit = defineEmits(["openPopup", "closePopup"]);
 
 let map: any;
 const apiKey = process.env.MAPBOX_API_KEY;
@@ -116,7 +116,7 @@ onMounted(() => {
         };
       }
 
-      emit("hover");
+      emit("openPopup");
     } else if (hoveredFeatureId !== null) {
       hidePopup();
     }
@@ -129,7 +129,7 @@ function hidePopup() {
   showPopup.value = false;
   hoveredFeatureId = null;
   map.getCanvas().style.cursor = "";
-  emit("blur");
+  emit("closePopup");
 }
 
 onUnmounted(() => {

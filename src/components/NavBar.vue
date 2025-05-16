@@ -5,15 +5,35 @@
       <div class="meddon-capital">æ</div>
       <div class="meddon-lowercase">ther</div>
     </div>
-    <button class="nav" @click="showSuggestionPopup = true">Suggest a place</button>
+    <button
+      class="nav"
+      @click="
+        () => {
+          emit('openPopup');
+          showSuggestionPopup = true;
+        }
+      "
+    >
+      Suggest a place
+    </button>
   </div>
 
-  <SuggestionPopup v-if="showSuggestionPopup" />
+  <SuggestionPopup
+    v-if="showSuggestionPopup"
+    @click="
+      () => {
+        emit('closePopup');
+        showSuggestionPopup = false;
+      }
+    "
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 import SuggestionPopup from "./SuggestionPopup.vue";
+
+const emit = defineEmits(["openPopup", "closePopup"]);
 
 const showSuggestionPopup = ref(false);
 </script>

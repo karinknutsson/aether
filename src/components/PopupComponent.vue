@@ -18,7 +18,7 @@ import { useQuasar } from "quasar";
 
 const $q = useQuasar();
 
-const props = defineProps({
+defineProps({
   popup: {
     type: Object as PropType<Popup>,
     required: true,
@@ -26,33 +26,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close"]);
-
-const popupTop = computed(() => {
-  return props.popup?.y + "px";
-});
-
-const popupLeft = computed(() => {
-  return props.popup?.x + "px";
-});
 </script>
 
 <style scoped lang="scss">
-.close-button {
-  background: transparent;
-  border: 0;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  color: #909090;
-  padding: 0;
-  transform: translateX(8px);
-  margin-bottom: 4px;
-
-  i {
-    font-size: 20px;
-  }
-}
-
 .popup-wrapper {
   position: absolute;
   left: 0;
