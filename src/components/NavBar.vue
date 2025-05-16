@@ -1,8 +1,8 @@
 <template>
   <div class="navbar-container">
-    <button class="nav">About</button>
+    <!-- <button class="nav">About</button> -->
     <span class="meddon-capital">æ</span><span class="meddon-lowercase">ther</span>
-    <button class="nav">Suggest a place</button>
+    <!-- <button class="nav">Suggest a place</button> -->
   </div>
 </template>
 
