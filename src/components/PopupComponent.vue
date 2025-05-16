@@ -72,5 +72,6 @@ const popupLeft = computed(() => {
   width: 100vw;
   max-width: 900px;
   aspect-ratio: 16 / 10;
+  border-radius: 2px;
 }
 </style>

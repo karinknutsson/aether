@@ -5,11 +5,18 @@
       <div class="meddon-capital">æ</div>
       <div class="meddon-lowercase">ther</div>
     </div>
-    <button class="nav">Suggest a place</button>
+    <button class="nav" @click="showSuggestionPopup = true">Suggest a place</button>
   </div>
+
+  <SuggestionPopup v-if="showSuggestionPopup" />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+import SuggestionPopup from "./SuggestionPopup.vue";
+
+const showSuggestionPopup = ref(false);
+</script>
 
 <style scoped lang="scss">
 button.nav {
@@ -22,6 +29,7 @@ button.nav {
   background: rgba(255, 255, 255, 0.3);
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   padding: 12px 32px;
+  border-radius: 2px;
 }
 
 .navbar-container {

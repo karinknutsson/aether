@@ -84,6 +84,7 @@ img {
   width: 100%;
   height: calc(100% - 40px);
   overflow: hidden;
+  border-radius: 2px;
 
   img {
     width: 100%;
