@@ -50,8 +50,8 @@ const emit = defineEmits(["close"]);
   align-items: flex-end;
   justify-content: flex-start;
   width: 100vw;
-  max-width: 900px;
-  aspect-ratio: 16 / 10;
+  max-width: 800px;
+  aspect-ratio: 2 / 1.66;
   border-radius: 2px;
 }
 </style>
