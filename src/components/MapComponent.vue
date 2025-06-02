@@ -27,7 +27,7 @@ const x = ref(0);
 const y = ref(0);
 const showOverlay = ref(false);
 const showPopup = ref(false);
-const popup = ref<Popup>({ title: "", attachments: [] });
+const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
 
 const overlayStyle = computed(() => {
   const radius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
@@ -113,6 +113,7 @@ onMounted(() => {
         popup.value = {
           title: feature.properties.description,
           attachments: attachments,
+          folderName: feature.properties.folderName,
         };
       }
 

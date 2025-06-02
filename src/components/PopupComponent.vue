@@ -4,7 +4,11 @@
       <div class="popup-container">
         <button class="close-button flex-center" @click="emit('close')">
           <i class="pi pi-times icon"></i></button
-        ><ImageFader :images="popup.attachments" :title="popup.title" />
+        ><ImageFader
+          :images="popup.attachments"
+          :title="popup.title"
+          :folder-name="popup.folderName"
+        />
       </div>
     </div>
   </div>

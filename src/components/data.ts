@@ -5,11 +5,8 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Soviet War Memorial Treptow",
-      attachments: [
-        "example-images/merzouga.jpg",
-        "example-images/chellah-storks.jpg",
-        "example-images/meknes-medina.jpg",
-      ],
+      attachments: [],
+      folderName: "war-memorial-treptow",
     },
     geometry: {
       type: "Point",
@@ -21,6 +18,7 @@ export const features: Feature[] = [
     properties: {
       description: "Grunewald",
       attachments: [],
+      folderName: "grunewald",
     },
     geometry: {
       type: "Point",
@@ -31,11 +29,8 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Tiergarten",
-      attachments: [
-        "example-images/merzouga.jpg",
-        "example-images/chellah-storks.jpg",
-        "example-images/meknes-medina.jpg",
-      ],
+      attachments: [],
+      folderName: "tiergarten",
     },
     geometry: {
       type: "Point",
@@ -46,11 +41,8 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Volkspark Prenzlauer Berg",
-      attachments: [
-        "example-images/merzouga.jpg",
-        "example-images/chellah-storks.jpg",
-        "example-images/meknes-medina.jpg",
-      ],
+      attachments: ["0.jpg", "1.jpg", "2.jpg", "3.jpg"],
+      folderName: "volkspark-prenzlauer-berg",
     },
     geometry: {
       type: "Point",

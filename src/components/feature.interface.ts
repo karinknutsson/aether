@@ -3,6 +3,7 @@ export default interface Feature {
   properties: {
     description: string;
     attachments: string[];
+    folderName: string;
   };
   geometry: {
     type: string;
