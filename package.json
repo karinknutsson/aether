@@ -17,6 +17,7 @@
   "dependencies": {
     "@primeuix/themes": "^1.0.3",
     "@quasar/extras": "^1.16.4",
+    "@vueuse/core": "^13.3.0",
     "gsap": "^3.12.7",
     "mapbox-gl": "^3.11.0",
     "pinia": "^3.0.1",

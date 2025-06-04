@@ -14,11 +14,19 @@
         }
       "
     >
-      Suggest a place
+      Contribute
     </button>
   </div>
 
-  <SuggestionPopup v-if="showSuggestionPopup" />
+  <SuggestionPopup
+    v-if="showSuggestionPopup"
+    @close="
+      () => {
+        emit('closePopup');
+        showSuggestionPopup = false;
+      }
+    "
+  />
 </template>
 
 <script setup lang="ts">
@@ -33,12 +41,12 @@ const showSuggestionPopup = ref(false);
 <style scoped lang="scss">
 button.nav {
   border: 0;
-  font-size: 18px;
-  font-weight: 600;
-  // text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
   color: $deep-blue;
   // font-style: italic;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.7);
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   padding: 12px 32px;
   border-radius: 2px;

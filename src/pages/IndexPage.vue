@@ -1,12 +1,12 @@
 <template>
   <q-page class="row">
+    <NavBar @open-popup="isPopupOpen = true" @close-popup="isPopupOpen = false" />
+
     <div class="col-xs-12">
       <MapComponent @open-popup="isPopupOpen = true" @close-popup="isPopupOpen = false" />
     </div>
 
     <CursorComponent v-if="!isPopupOpen" />
-
-    <NavBar @open-popup="isPopupOpen = true" @close-popup="isPopupOpen = false" />
   </q-page>
 </template>
 

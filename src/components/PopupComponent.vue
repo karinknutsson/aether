@@ -38,6 +38,7 @@ const emit = defineEmits(["close"]);
   left: 0;
   top: 20vh;
   width: 100vw;
+  pointer-events: none;
 }
 
 .popup-container {
@@ -53,5 +54,6 @@ const emit = defineEmits(["close"]);
   max-width: 800px;
   aspect-ratio: 2 / 1.66;
   border-radius: 2px;
+  pointer-events: auto;
 }
 </style>

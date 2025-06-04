@@ -119,6 +119,7 @@ onMounted(() => {
 
       emit("openPopup");
     } else if (hoveredFeatureId !== null) {
+      console.log("click map component ");
       hidePopup();
     }
   });

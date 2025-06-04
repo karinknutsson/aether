@@ -1,6 +1,6 @@
 <template>
   <div class="suggestion-popup-wrapper flex-center">
-    <div class="suggestion-popup-container">
+    <div ref="popup" class="suggestion-popup-container">
       <button class="close-button flex-center" @click="emit('close')">
         <i class="pi pi-times icon"></i>
       </button>
@@ -23,17 +23,24 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { onClickOutside } from "@vueuse/core";
 
 const emit = defineEmits(["close"]);
 
+const popup = ref();
 const description = ref("");
 const coordinates = ref("");
+
+onClickOutside(popup, () => {
+  emit("close");
+});
 </script>
 
 <style scoped lang="scss">
 label {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 16px;
+  text-transform: uppercase;
 }
 
 .suggestion-popup-wrapper {
@@ -44,7 +51,7 @@ label {
 }
 
 .suggestion-popup-container {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.7);
   z-index: 50001;
   padding: 8px 16px 32px 16px;
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
