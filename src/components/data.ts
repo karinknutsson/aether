@@ -1,12 +1,16 @@
 import type Feature from "./feature.interface";
 
+function createImageArray(count: number) {
+  return Array.from({ length: count }, (_, i) => `${i}.jpg`);
+}
+
 export const features: Feature[] = [
   {
     type: "Feature",
     properties: {
-      description: "Soviet War Memorial Treptow",
-      attachments: [],
-      folderName: "war-memorial-treptow",
+      description: "Treptower Park",
+      attachments: createImageArray(8),
+      folderName: "treptower-park",
     },
     geometry: {
       type: "Point",
@@ -41,7 +45,7 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Volkspark Prenzlauer Berg",
-      attachments: ["0.jpg", "1.jpg", "2.jpg", "3.jpg"],
+      attachments: createImageArray(4),
       folderName: "volkspark-prenzlauer-berg",
     },
     geometry: {
