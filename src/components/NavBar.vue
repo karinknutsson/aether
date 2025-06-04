@@ -18,15 +18,7 @@
     </button>
   </div>
 
-  <SuggestionPopup
-    v-if="showSuggestionPopup"
-    @click="
-      () => {
-        emit('closePopup');
-        showSuggestionPopup = false;
-      }
-    "
-  />
+  <SuggestionPopup v-if="showSuggestionPopup" />
 </template>
 
 <script setup lang="ts">

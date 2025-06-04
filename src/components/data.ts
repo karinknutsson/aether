@@ -53,8 +53,4 @@ export const features: Feature[] = [
       coordinates: [13.464988, 52.535379],
     },
   },
-  //   { lat:, lng: , title: 'Grunewald' },
-  //   { lat: 52.512238, lng: 13.340973, title: 'Tiergarten' },
-  //   { lat: 54.13259, lng: 13.432281, title: 'Wampen' },
-  //   { lat: 52.535379, lng: 13.464988, title: 'Volkspark Prenzlauer Berg' },
 ];
