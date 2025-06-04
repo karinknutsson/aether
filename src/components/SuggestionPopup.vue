@@ -15,7 +15,7 @@
           <input name="coordinates" id="coordinates" v-model="coordinates" type="text" />
         </div>
 
-        <button type="submit">Submit</button>
+        <button class="submit" type="submit">Send</button>
       </form>
     </div>
   </div>
@@ -41,6 +41,33 @@ label {
   font-weight: 800;
   font-size: 16px;
   text-transform: uppercase;
+}
+
+input {
+  border: 0;
+  padding: 6px 8px;
+  font-size: 16px;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+input:focus {
+  outline: none;
+}
+
+button.submit {
+  background: $deep-blue;
+  border: 0;
+  color: white;
+  text-transform: uppercase;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  margin-top: 16px;
+}
+
+button.submit:focus {
+  outline: none;
 }
 
 .suggestion-popup-wrapper {
