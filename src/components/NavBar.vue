@@ -10,20 +10,20 @@
       @click="
         () => {
           emit('openPopup');
-          showSuggestionPopup = true;
+          showSearchPopup = true;
         }
       "
     >
-      Contribute
+      Search
     </button>
   </div>
 
-  <SuggestionPopup
-    v-if="showSuggestionPopup"
+  <SearchPopup
+    v-if="showSearchPopup"
     @close="
       () => {
         emit('closePopup');
-        showSuggestionPopup = false;
+        showSearchPopup = false;
       }
     "
   />
@@ -31,11 +31,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import SuggestionPopup from "./SuggestionPopup.vue";
+import SearchPopup from "./SearchPopup.vue";
 
 const emit = defineEmits(["openPopup", "closePopup"]);
 
-const showSuggestionPopup = ref(false);
+const showSearchPopup = ref(false);
 </script>
 
 <style scoped lang="scss">
@@ -50,6 +50,7 @@ button.nav {
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   padding: 12px 32px;
   border-radius: 2px;
+  pointer-events: auto;
 }
 
 .navbar-container {
@@ -63,6 +64,7 @@ button.nav {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  pointer-events: none;
 }
 
 .logo-wrapper {

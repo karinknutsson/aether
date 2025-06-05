@@ -5,6 +5,11 @@
   </div>
 
   <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
+  <SuggestionPopup
+    v-if="showSuggestionPopup"
+    :popupRect="suggestionPopupRect"
+    @close="hideSuggestionPopup"
+  />
 </template>
 
 <script setup lang="ts">
@@ -14,6 +19,8 @@ import { features } from "./data";
 import PopupComponent from "./PopupComponent.vue";
 import type Popup from "./popup.interface";
 import { useQuasar } from "quasar";
+import SuggestionPopup from "./SuggestionPopup.vue";
+import PopupRect from "./popup-rect.interface";
 
 const $q = useQuasar();
 
@@ -27,6 +34,8 @@ const x = ref(0);
 const y = ref(0);
 const showOverlay = ref(false);
 const showPopup = ref(false);
+const showSuggestionPopup = ref(false);
+const suggestionPopupRect = ref({ w: 360, h: 240, x: 0, y: 0 } as PopupRect);
 const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
 
 const overlayStyle = computed(() => {
@@ -123,9 +132,40 @@ onMounted(() => {
       hidePopup();
     }
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  map.on("contextmenu", (e: any) => {
+    let popupX = 0;
+    let popupY = 0;
+
+    if ($q.screen.gt.sm) {
+      // popup coordinates for md & larger screens
+      popupX = Math.min(window.innerWidth - suggestionPopupRect.value.w, e.point.x);
+      popupY = Math.min(window.innerHeight - suggestionPopupRect.value.h, e.point.y);
+    } else {
+      popupX = 0;
+      popupY = window.innerHeight * 0.3;
+      // popup coordinates for xs & sm screens
+    }
+
+    suggestionPopupRect.value.x = popupX;
+    suggestionPopupRect.value.y = popupY;
+
+    openSuggestionPopup();
+    console.log(e);
+  });
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function openSuggestionPopup() {
+  showSuggestionPopup.value = true;
+  emit("openPopup");
+}
+
+function hideSuggestionPopup() {
+  showSuggestionPopup.value = false;
+  emit("closePopup");
+}
+
 function hidePopup() {
   showOverlay.value = false;
   showPopup.value = false;
