@@ -1,9 +1,13 @@
 <template>
   <div
+    ref="popup"
     v-if="popupRect"
     class="suggestion-popup-container"
     :style="{ top: popupRect.y + 'px', left: popupRect.x + 'px' }"
   >
+    <button class="close-button flex-center" @click="emit('close')">
+      <i class="pi pi-times icon"></i>
+    </button>
     text
   </div>
 </template>
