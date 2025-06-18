@@ -9,7 +9,7 @@
       <i class="pi pi-times icon"></i>
     </button>
 
-    <form class="form-container">
+    <form v-if="!isFormSubmitted" @submit.prevent="submitSuggestion" class="form-container">
       <div class="input-container">
         <label for="description">Description</label>
         <input
@@ -40,6 +40,8 @@
 
       <button class="submit" type="submit">Send</button>
     </form>
+
+    <div v-else>Thank you for your contribution!</div>
   </div>
 </template>
 
@@ -61,10 +63,22 @@ const latitude = ref(props.popupRect.lat.toFixed(5));
 const longitude = ref(props.popupRect.lng.toFixed(5));
 const description = ref("");
 const popup = ref();
+const isFormSubmitted = ref(false);
 
 onClickOutside(popup, () => {
   emit("close");
 });
+
+function submitSuggestion() {
+  console.log("submit");
+
+  isFormSubmitted.value = true;
+
+  setTimeout(() => {
+    isFormSubmitted.value = false;
+    emit("close");
+  }, 3000);
+}
 </script>
 
 <style scoped lang="scss">
