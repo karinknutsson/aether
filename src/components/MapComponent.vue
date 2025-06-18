@@ -5,11 +5,17 @@
   </div>
 
   <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
-  <SuggestionPopup
+  <SuggestButton
+    v-if="suggestButton"
+    :x="suggestButtonCoordinates.x"
+    :y="suggestButtonCoordinates.y"
+    @close="hideSuggestButton"
+  />
+  <!-- <SuggestionPopup
     v-if="showSuggestionPopup"
     :popupRect="suggestionPopupRect"
     @close="hideSuggestionPopup"
-  />
+  /> -->
 </template>
 
 <script setup lang="ts">
@@ -22,6 +28,7 @@ import { useQuasar } from "quasar";
 import SuggestionPopup from "./SuggestionPopup.vue";
 import PopupRect from "./popup-rect.interface";
 import { useSearchStore } from "src/stores/search-store";
+import SuggestButton from "./SuggestButton.vue";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
@@ -37,6 +44,8 @@ const y = ref(0);
 const showOverlay = ref(false);
 const showPopup = ref(false);
 const showSuggestionPopup = ref(false);
+const suggestButton = ref(false);
+const suggestButtonCoordinates = ref({ x: 0, y: 0 });
 const suggestionPopupRect = ref({ w: 400, h: 300, x: 0, y: 0, lat: 0, lng: 0 } as PopupRect);
 const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
 
@@ -120,26 +129,14 @@ onMounted(() => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("contextmenu", (e: any) => {
-    let popupX = 0;
-    let popupY = 0;
+    new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
+      .setLngLat([e.lngLat.lng, e.lngLat.lat])
+      .addTo(map);
 
-    if ($q.screen.gt.sm) {
-      // popup coordinates for md & larger screens
-      popupX = Math.min(window.innerWidth - suggestionPopupRect.value.w, e.point.x);
-      popupY = Math.min(window.innerHeight - suggestionPopupRect.value.h, e.point.y);
-    } else {
-      popupX = 0;
-      popupY = window.innerHeight * 0.3;
-      // popup coordinates for xs & sm screens
-    }
+    suggestButtonCoordinates.value.x = e.point.x + 20;
+    suggestButtonCoordinates.value.y = e.point.y;
 
-    suggestionPopupRect.value.x = popupX;
-    suggestionPopupRect.value.y = popupY;
-    suggestionPopupRect.value.lat = e.lngLat.lat;
-    suggestionPopupRect.value.lng = e.lngLat.lng;
-
-    openSuggestionPopup();
-    console.log(e);
+    showSuggestButton();
   });
 });
 
@@ -157,14 +154,14 @@ function createCustomMarker(color: string) {
   return markerElement;
 }
 
-function openSuggestionPopup() {
-  showSuggestionPopup.value = true;
-  emit("openPopup");
+function showSuggestButton() {
+  suggestButton.value = true;
+  // emit("closePopup");
 }
 
-function hideSuggestionPopup() {
-  showSuggestionPopup.value = false;
-  emit("closePopup");
+function hideSuggestButton() {
+  suggestButton.value = false;
+  // emit("closePopup");
 }
 
 function hidePopup() {
