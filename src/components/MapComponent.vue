@@ -6,16 +6,17 @@
 
   <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
   <SuggestButton
-    v-if="suggestButton"
+    v-if="showSuggestButton"
     :x="suggestButtonCoordinates.x"
     :y="suggestButtonCoordinates.y"
+    @click="openSuggestionPopup"
     @close="hideSuggestButton"
   />
-  <!-- <SuggestionPopup
+  <SuggestionPopup
     v-if="showSuggestionPopup"
     :popupRect="suggestionPopupRect"
     @close="hideSuggestionPopup"
-  /> -->
+  />
 </template>
 
 <script setup lang="ts">
@@ -44,7 +45,7 @@ const y = ref(0);
 const showOverlay = ref(false);
 const showPopup = ref(false);
 const showSuggestionPopup = ref(false);
-const suggestButton = ref(false);
+const showSuggestButton = ref(false);
 const suggestButtonCoordinates = ref({ x: 0, y: 0 });
 const suggestionPopupRect = ref({ w: 400, h: 300, x: 0, y: 0, lat: 0, lng: 0 } as PopupRect);
 const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
@@ -133,10 +134,13 @@ onMounted(() => {
       .setLngLat([e.lngLat.lng, e.lngLat.lat])
       .addTo(map);
 
-    suggestButtonCoordinates.value.x = e.point.x + 20;
-    suggestButtonCoordinates.value.y = e.point.y;
+    suggestButtonCoordinates.value.x = e.point.x + 24;
+    suggestButtonCoordinates.value.y = e.point.y - 18;
 
-    showSuggestButton();
+    suggestionPopupRect.value.lng = e.lngLat.lng;
+    suggestionPopupRect.value.lat = e.lngLat.lat;
+
+    openSuggestButton();
   });
 });
 
@@ -154,14 +158,43 @@ function createCustomMarker(color: string) {
   return markerElement;
 }
 
-function showSuggestButton() {
-  suggestButton.value = true;
-  // emit("closePopup");
+function openSuggestionPopup() {
+  showSuggestButton.value = false;
+  let popupX = 0;
+  let popupY = 0;
+
+  if ($q.screen.gt.sm) {
+    // popup coordinates for md & larger screens
+    popupX = Math.min(
+      window.innerWidth - suggestionPopupRect.value.w,
+      suggestButtonCoordinates.value.x,
+    );
+    popupY = Math.min(
+      window.innerHeight - suggestionPopupRect.value.h,
+      suggestButtonCoordinates.value.y,
+    );
+  } else {
+    // popup coordinates for xs & sm screens
+    popupX = 0;
+    popupY = window.innerHeight * 0.3;
+  }
+  suggestionPopupRect.value.x = popupX;
+  suggestionPopupRect.value.y = popupY;
+  showSuggestionPopup.value = true;
+  emit("openPopup");
+}
+
+function hideSuggestionPopup() {
+  showSuggestionPopup.value = false;
+  emit("closePopup");
+}
+
+function openSuggestButton() {
+  showSuggestButton.value = true;
 }
 
 function hideSuggestButton() {
-  suggestButton.value = false;
-  // emit("closePopup");
+  showSuggestButton.value = false;
 }
 
 function hidePopup() {
