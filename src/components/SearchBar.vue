@@ -20,8 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useSearchStore } from "src/stores/search-store";
 
+const searchStore = useSearchStore();
 const searchTerm = ref("");
 
 function clearSearchTerm() {
@@ -41,6 +43,17 @@ function isCoordinate(input: string) {
   }
   return null;
 }
+
+watch(searchTerm, async (value) => {
+  if (!value) return;
+
+  if (isCoordinate(value)) {
+    console.log("coordinate");
+  } else {
+    await searchStore.fetchSuggestions(value);
+    console.log(searchStore.suggestions);
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -50,7 +63,7 @@ function isCoordinate(input: string) {
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   border-radius: 2px;
   width: 360px;
-  height: 55px;
+  height: 56px;
   padding: 0 16px;
 }
 
@@ -67,7 +80,8 @@ function isCoordinate(input: string) {
   padding: 6px 8px;
   font-size: 16px;
   font-weight: 600;
-  width: 240px;
+  width: 260px;
+  margin-left: 8px;
 }
 
 .search-icon {

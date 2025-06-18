@@ -35,16 +35,17 @@ const showSearchBar = ref(false);
 <style scoped lang="scss">
 button.nav {
   border: 0;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 800;
   text-transform: uppercase;
   color: $deep-blue;
   // font-style: italic;
   background: rgba(255, 255, 255, 0.7);
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
-  padding: 12px 32px;
+  padding: 0 32px;
   border-radius: 2px;
   pointer-events: auto;
+  height: 56px;
 }
 
 .navbar-container {
