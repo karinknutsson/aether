@@ -53,8 +53,6 @@ onMounted(() => {
 
   map = new mapboxgl.Map({
     container: "map",
-    // purple-cyan
-    // style: "mapbox://styles/karinmiriam/cm9fipg9v00ks01s4dhw089bb",
     // purple-cyan-raleway
     style: "mapbox://styles/karinmiriam/cmaqslh9g00r501s90mydcred",
     zoom: 12,
@@ -63,25 +61,10 @@ onMounted(() => {
   });
 
   features.forEach((feature) => {
-    new mapboxgl.Marker({ element: createCustomMarker() })
+    new mapboxgl.Marker({ element: createCustomMarker("#0a1657") })
       .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
       .addTo(map);
   });
-
-  function createCustomMarker() {
-    const markerElement = document.createElement("div");
-    markerElement.className = "prime-icon-marker";
-    markerElement.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
-        <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
-        <div style="display: flex; gap: 4px">
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #0a1657"></div>
-        </div>
-      </div>
-      `;
-    return markerElement;
-  }
 
   map.on("style.load", () => {
     map.addSource("places", {
@@ -160,6 +143,20 @@ onMounted(() => {
   });
 });
 
+function createCustomMarker(color: string) {
+  const markerElement = document.createElement("div");
+  markerElement.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+        <div style="display: flex; gap: 4px">
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+          <div style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+        </div>
+      </div>
+      `;
+  return markerElement;
+}
+
 function openSuggestionPopup() {
   showSuggestionPopup.value = true;
   emit("openPopup");
@@ -198,6 +195,10 @@ watch(
         zoom: 14,
         essential: true,
       });
+
+      new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
+        .setLngLat([value[0], value[1]])
+        .addTo(map);
     }
   },
 );
