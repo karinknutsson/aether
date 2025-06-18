@@ -22,7 +22,9 @@
     <ul>
       <li v-for="suggestion in searchStore.suggestions">
         <button class="suggestion-list-button" @click="searchStore.selectSuggestion(suggestion)">
-          <div>{{ suggestion.name }}</div>
+          <div class="suggestion-header">
+            <h3>{{ suggestion.name }}</h3>
+          </div>
           <div>{{ suggestion.address }}</div>
           <div>{{ suggestion.distance }}</div>
         </button>
@@ -86,7 +88,7 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 340px;
+  width: 360px;
 }
 
 li {
@@ -160,6 +162,15 @@ li {
 
   i {
     font-size: 16px;
+  }
+}
+
+.suggestion-header {
+  h3 {
+    font-weight: 700;
+    font-size: 14px;
+    margin: 0;
+    line-height: 120%;
   }
 }
 </style>

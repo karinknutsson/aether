@@ -8,6 +8,7 @@ export const useSearchStore = defineStore("searchStore", {
     sessionToken: "",
     suggestions: [] as any[],
     selectedSuggestion: [],
+    brandSuggestions: [],
     loading: false,
     error: null as string | null,
   }),
@@ -51,6 +52,7 @@ export const useSearchStore = defineStore("searchStore", {
           language: "en",
           limit: "5",
           session_token: this.sessionToken,
+          types: "poi",
         });
 
         const res = await fetch(`${MAPBOX_SEARCHBOX_URL}?${params.toString()}`);
