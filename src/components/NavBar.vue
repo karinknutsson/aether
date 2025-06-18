@@ -1,41 +1,35 @@
 <template>
   <div class="navbar-container">
-    <button class="nav">About</button>
-    <div class="logo-wrapper">
-      <div class="meddon-capital">æ</div>
-      <div class="meddon-lowercase">ther</div>
-    </div>
-    <button
+    <!-- <button
       class="nav"
       @click="
         () => {
           emit('openPopup');
-          showSearchPopup = true;
+          showSearchBar = true;
         }
       "
     >
       Search
-    </button>
-  </div>
+    </button> -->
 
-  <SearchPopup
-    v-if="showSearchPopup"
-    @close="
-      () => {
-        emit('closePopup');
-        showSearchPopup = false;
-      }
-    "
-  />
+    <SearchBar />
+
+    <div class="logo-wrapper">
+      <div class="meddon-capital">æ</div>
+      <div class="meddon-lowercase">ther</div>
+    </div>
+
+    <button class="nav">About</button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import SearchPopup from "./SearchPopup.vue";
+import SearchBar from "./SearchBar.vue";
 
 const emit = defineEmits(["openPopup", "closePopup"]);
 
-const showSearchPopup = ref(false);
+const showSearchBar = ref(false);
 </script>
 
 <style scoped lang="scss">

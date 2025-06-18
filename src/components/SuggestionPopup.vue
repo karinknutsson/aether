@@ -8,7 +8,38 @@
     <button class="close-button flex-center" @click="emit('close')">
       <i class="pi pi-times icon"></i>
     </button>
-    text
+
+    <form class="form-container">
+      <div class="input-container">
+        <label for="description">Description</label>
+        <input
+          class="suggestion"
+          name="description"
+          id="description"
+          v-model="description"
+          type="text"
+        />
+      </div>
+
+      <div class="lat-lng-container">
+        <div class="input-container lat-lng">
+          <label for="latitude">Latitude</label>
+          <input class="suggestion" name="latitude" id="latitude" v-model="latitude" type="text" />
+        </div>
+        <div class="input-container lat-lng">
+          <label for="longitude">Longitude</label>
+          <input
+            class="suggestion"
+            name="longitude"
+            id="longitude"
+            v-model="longitude"
+            type="text"
+          />
+        </div>
+      </div>
+
+      <button class="submit" type="submit">Send</button>
+    </form>
   </div>
 </template>
 
@@ -26,6 +57,9 @@ const props = defineProps({
 
 const emit = defineEmits(["close"]);
 
+const latitude = ref(props.popupRect.lat.toFixed(5));
+const longitude = ref(props.popupRect.lng.toFixed(5));
+const description = ref("");
 const popup = ref();
 
 onClickOutside(popup, () => {
@@ -62,5 +96,18 @@ button.submit:focus {
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
+}
+
+.lat-lng-container {
+  display: flex;
+  gap: 16px;
+
+  input {
+    width: 100%;
+  }
+}
+
+.lat-lng {
+  flex: 1 1 40%;
 }
 </style>

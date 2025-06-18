@@ -35,7 +35,7 @@ const y = ref(0);
 const showOverlay = ref(false);
 const showPopup = ref(false);
 const showSuggestionPopup = ref(false);
-const suggestionPopupRect = ref({ w: 360, h: 240, x: 0, y: 0 } as PopupRect);
+const suggestionPopupRect = ref({ w: 400, h: 300, x: 0, y: 0, lat: 0, lng: 0 } as PopupRect);
 const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
 
 const overlayStyle = computed(() => {
@@ -150,6 +150,8 @@ onMounted(() => {
 
     suggestionPopupRect.value.x = popupX;
     suggestionPopupRect.value.y = popupY;
+    suggestionPopupRect.value.lat = e.lngLat.lat;
+    suggestionPopupRect.value.lng = e.lngLat.lng;
 
     openSuggestionPopup();
     console.log(e);

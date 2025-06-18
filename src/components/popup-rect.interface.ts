@@ -3,4 +3,6 @@ export default interface PopupRect {
   h: number;
   x: number;
   y: number;
+  lat: number;
+  lng: number;
 }
