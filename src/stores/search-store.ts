@@ -1,15 +1,36 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 
 const MAPBOX_SEARCHBOX_URL = "https://api.mapbox.com/search/searchbox/v1/suggest";
+const token = process.env.MAPBOX_API_KEY;
 
 export const useSearchStore = defineStore("searchStore", {
   state: () => ({
+    sessionToken: "",
     suggestions: [] as any[],
+    selectedSuggestion: [],
     loading: false,
     error: null as string | null,
   }),
-  getters: {},
+
   actions: {
+    async selectSuggestion(suggestion: any) {
+      try {
+        const encodedMapboxId = encodeURIComponent(suggestion.mapbox_id);
+        const retrieveUrl = `https://api.mapbox.com/search/searchbox/v1/retrieve/${encodedMapboxId}?session_token=${this.sessionToken}&access_token=${token}`;
+        const res = await fetch(retrieveUrl);
+        const data = await res.json();
+
+        this.selectedSuggestion = data.features[0].geometry.coordinates;
+        // if (coords && coords.length === 2) {
+        //   map.flyTo({ center: coords, zoom: 14, essential: true });
+        // } else {
+        //   console.warn("Coordinates not found for suggestion", suggestion);
+        // }
+      } catch (err) {
+        console.error("Failed to retrieve suggestion details:", err);
+      }
+    },
+
     async fetchSuggestions(query: string) {
       if (!query) {
         this.suggestions = [];
@@ -20,17 +41,16 @@ export const useSearchStore = defineStore("searchStore", {
       this.error = null;
 
       try {
-        const token = process.env.MAPBOX_API_KEY;
         if (!token) return;
 
-        const sessionToken = Math.random().toString(36).substring(2);
+        this.sessionToken = Math.random().toString(36).substring(2);
 
         const params = new URLSearchParams({
           q: query,
           access_token: token,
           language: "en",
           limit: "5",
-          session_token: sessionToken,
+          session_token: this.sessionToken,
         });
 
         const res = await fetch(`${MAPBOX_SEARCHBOX_URL}?${params.toString()}`);

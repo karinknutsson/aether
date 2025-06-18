@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import { features } from "./data";
 import PopupComponent from "./PopupComponent.vue";
@@ -21,8 +21,10 @@ import type Popup from "./popup.interface";
 import { useQuasar } from "quasar";
 import SuggestionPopup from "./SuggestionPopup.vue";
 import PopupRect from "./popup-rect.interface";
+import { useSearchStore } from "src/stores/search-store";
 
 const $q = useQuasar();
+const searchStore = useSearchStore();
 
 const emit = defineEmits(["openPopup", "closePopup"]);
 
@@ -186,6 +188,19 @@ function onMouseDown(e: MouseEvent) {
   x.value = e.clientX;
   y.value = e.clientY;
 }
+
+watch(
+  () => searchStore.selectedSuggestion,
+  (value) => {
+    if (value[0] && value[1]) {
+      map.flyTo({
+        center: [value[0], value[1]],
+        zoom: 14,
+        essential: true,
+      });
+    }
+  },
+);
 </script>
 
 <style scoped lang="scss">
