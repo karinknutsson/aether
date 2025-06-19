@@ -222,13 +222,15 @@ watch(
   () => searchStore.selectedSuggestion,
   (value) => {
     if (value[0] && value[1]) {
+      if (marker) marker.remove();
+
       map.flyTo({
         center: [value[0], value[1]],
         zoom: 14,
         essential: true,
       });
 
-      new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
+      marker = new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
         .setLngLat([value[0], value[1]])
         .addTo(map);
     }

@@ -20,13 +20,7 @@ export const useSearchStore = defineStore("searchStore", {
         const retrieveUrl = `https://api.mapbox.com/search/searchbox/v1/retrieve/${encodedMapboxId}?session_token=${this.sessionToken}&access_token=${token}`;
         const res = await fetch(retrieveUrl);
         const data = await res.json();
-
         this.selectedSuggestion = data.features[0].geometry.coordinates;
-        // if (coords && coords.length === 2) {
-        //   map.flyTo({ center: coords, zoom: 14, essential: true });
-        // } else {
-        //   console.warn("Coordinates not found for suggestion", suggestion);
-        // }
       } catch (err) {
         console.error("Failed to retrieve suggestion details:", err);
       }
@@ -52,7 +46,7 @@ export const useSearchStore = defineStore("searchStore", {
           language: "en",
           limit: "5",
           session_token: this.sessionToken,
-          types: "poi",
+          types: "country,region,district,place,city,locality,neighborhood,poi",
         });
 
         const res = await fetch(`${MAPBOX_SEARCHBOX_URL}?${params.toString()}`);
