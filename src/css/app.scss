@@ -98,3 +98,8 @@ button.submit:focus {
 button:focus {
   outline: 2px solid $focus-color;
 }
+
+input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px var(--q-body-bg) inset !important;
+  -webkit-text-fill-color: var(--q-font-color) !important;
+}
