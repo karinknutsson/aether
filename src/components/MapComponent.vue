@@ -1,8 +1,7 @@
 <template>
   <div class="overlay" v-if="showOverlay" :style="overlayStyle"></div>
-  <div>
-    <div ref="mapContainer" id="map" class="map-container"></div>
-  </div>
+
+  <div ref="mapContainer" id="map" class="map-container"></div>
 
   <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
   <SuggestButton
@@ -124,7 +123,6 @@ onMounted(() => {
 
       emit("openPopup");
     } else if (hoveredFeatureId !== null) {
-      console.log("click map component ");
       hidePopup();
     }
   });

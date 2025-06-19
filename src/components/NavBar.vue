@@ -12,14 +12,18 @@
       Search
     </button> -->
 
-    <SearchBar />
+    <div class="search-wrapper">
+      <SearchBar />
+    </div>
 
     <div class="logo-wrapper">
       <div class="meddon-capital">æ</div>
       <div class="meddon-lowercase">ther</div>
     </div>
 
-    <button class="nav">About</button>
+    <div class="about-wrapper">
+      <button class="nav">About</button>
+    </div>
   </div>
 </template>
 
@@ -56,15 +60,16 @@ button.nav {
   width: 100vw;
   height: 100px;
   padding: 0 4vw;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
   pointer-events: none;
 }
 
 .logo-wrapper {
-  transform: translateY(16px);
+  transform: translateY(7px);
   display: flex;
+  justify-content: center;
 }
 
 .meddon-capital {
@@ -80,5 +85,13 @@ button.nav {
   font-size: 56px;
   transform: translateX(-9px);
   margin: 0;
+}
+
+.search-wrapper {
+  justify-self: start;
+}
+
+.about-wrapper {
+  justify-self: end;
 }
 </style>
