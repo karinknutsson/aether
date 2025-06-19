@@ -37,6 +37,7 @@ const searchStore = useSearchStore();
 const emit = defineEmits(["openPopup", "closePopup"]);
 
 let map: any;
+let marker: any;
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
 let hoveredFeatureId: string | null = null;
@@ -130,7 +131,10 @@ onMounted(() => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   map.on("contextmenu", (e: any) => {
-    new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
+    showSuggestionPopup.value = false;
+    if (marker) marker.remove();
+
+    marker = new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
       .setLngLat([e.lngLat.lng, e.lngLat.lat])
       .addTo(map);
 

@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from "vue";
+import { computed, PropType, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import PopupRect from "./popup-rect.interface";
 
@@ -69,7 +69,19 @@ onClickOutside(popup, () => {
   emit("close");
 });
 
+function isFormValid() {
+  return description.value && latitude.value && longitude.value;
+}
+
+function setFormErrors() {
+  // if (description.value)
+}
+
 function submitSuggestion() {
+  if (!isFormValid) {
+    setFormErrors();
+    return;
+  }
   console.log("submit");
 
   isFormSubmitted.value = true;
