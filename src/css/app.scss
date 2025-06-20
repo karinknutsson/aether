@@ -100,6 +100,6 @@ button:focus {
 }
 
 input:-webkit-autofill {
-  box-shadow: 0 0 0 1000px var(--q-body-bg) inset !important;
-  -webkit-text-fill-color: var(--q-font-color) !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: #060606 !important;
 }

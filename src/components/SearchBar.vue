@@ -10,6 +10,8 @@
           v-model="searchTerm"
           type="text"
           placeholder="Search"
+          @focus="isSearchFocused = true"
+          @blur="isSearchFocused = false"
         />
       </div>
       <button v-if="searchTerm" class="search-close-button flex-center" @click="clearSearchTerm">
@@ -35,28 +37,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useSearchStore } from "src/stores/search-store";
 
 const searchStore = useSearchStore();
 const searchTerm = ref("");
+const isSearchFocused = ref(false);
+
+const searchBarBackground = computed(() => {
+  return isSearchFocused.value ? "#ffffff" : "rgba(255, 255, 255, 0.7)";
+});
 
 function clearSearchTerm() {
   searchTerm.value = "";
 }
-
-// function selectSuggestion(suggestion: any) {
-//   console.log(suggestion.geometry);
-//   const [lng, lat] = suggestion.center;
-//   console.log(lng);
-//   console.log(lat);
-
-//   // map.flyTo({
-//   //   center: [lng, lat],
-//   //   zoom: 14,
-//   //   essential: true,
-//   // });
-// }
 
 function isCoordinate(input: string) {
   const coordRegex = /^\s*(-?\d+(\.\d+)?)[,\s]+(-?\d+(\.\d+)?)\s*$/;
@@ -108,7 +102,7 @@ li {
 
 .search-bar {
   pointer-events: auto;
-  background: rgba(255, 255, 255, 0.7);
+  background: v-bind(searchBarBackground);
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   border-radius: 2px;
   width: 360px;
