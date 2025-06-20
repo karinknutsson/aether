@@ -82,12 +82,12 @@ watch(searchTerm, async (value) => {
 ul {
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 8px 0;
   width: 360px;
 }
 
 li {
-  padding: 8px;
+  padding: 0 8px;
 }
 
 .suggestion-list-button {
@@ -98,6 +98,11 @@ li {
   border: 0;
   background: transparent;
   font-size: 14px;
+  padding: 8px;
+}
+
+.suggestion-list-button:hover {
+  background: #ffffff;
 }
 
 .search-bar {
