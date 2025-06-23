@@ -143,18 +143,13 @@ onMounted(() => {
     if (marker) marker.remove();
 
     marker = new mapboxgl.Marker({
-      element: createCustomMarker(e.lngLat.lng, e.lngLat.lat, "Suggest"),
+      element: createCustomMarker(e.lngLat.lng, e.lngLat.lat, "Suggest", true),
     })
       .setLngLat([e.lngLat.lng, e.lngLat.lat])
       .addTo(map);
 
-    suggestButtonCoordinates.value.x = e.point.x + 24;
-    suggestButtonCoordinates.value.y = e.point.y - 18;
-
     suggestionPopupRect.value.lng = e.lngLat.lng;
     suggestionPopupRect.value.lat = e.lngLat.lat;
-
-    openSuggestButton();
   });
 });
 
@@ -162,9 +157,14 @@ function createLocationId(lng: number, lat: number) {
   return `lng${lng.toString().replace(".", "-")}lat${lat.toString().replace(".", "-")}`;
 }
 
-function createCustomMarker(lng: number, lat: number, buttonText: string) {
+function createCustomMarker(lng: number, lat: number, buttonText: string, openButton?: boolean) {
   const id = createLocationId(lng, lat);
   const markerElement = document.createElement("div");
+
+  if (openButton) {
+    showButton(lng, lat, id, buttonText);
+    emit("hideCursor");
+  }
 
   markerElement.addEventListener("mouseenter", () => {
     showButton(lng, lat, id, buttonText);
@@ -185,14 +185,22 @@ function createCustomMarker(lng: number, lat: number, buttonText: string) {
 }
 
 function showButton(lng: number, lat: number, id: string, buttonText: string) {
+  if (buttonMarker) buttonMarker.remove();
+
   setTimeout(() => {
     buttonElement = document.createElement("div");
     buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize}px; height: ${buttonSize}px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
 
-    buttonElement.addEventListener("mousedown", () => {
-      hideButton(id);
-      emit("showCursor");
-    });
+    if (buttonText === "Suggest") {
+      suggestionPopupRect.value.lng = lng;
+      suggestionPopupRect.value.lat = lat;
+
+      buttonElement.addEventListener("mousedown", () => {
+        openSuggestionPopup();
+        hideButton(id);
+        emit("showCursor");
+      });
+    }
 
     buttonElement.addEventListener("mouseleave", () => {
       hideButton(id);
@@ -257,7 +265,6 @@ function hideButton(id: string) {
 }
 
 function openSuggestionPopup() {
-  showSuggestButton.value = false;
   let popupX = 0;
   let popupY = 0;
 
