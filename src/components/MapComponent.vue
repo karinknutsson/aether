@@ -172,9 +172,9 @@ function createCustomMarker(id: string, buttonText: string, color: string) {
   markerElement.addEventListener("mouseenter", () => {
     showButton(id, buttonText);
     emit("hideCursor");
-    console.log(id);
   });
   markerElement.addEventListener("mouseleave", () => {
+    hideButton(id);
     emit("showCursor");
   });
 
@@ -187,12 +187,70 @@ function createCustomMarker(id: string, buttonText: string, color: string) {
         </div>
       </div>
       `;
+
+  // markerElement.innerHTML = `
+  //     <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
+  //       <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 50%; background: red"></div>
+  //       <div style="display: flex; gap: 4px">
+  //         <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 50%; background: yellow"></div>
+  //         <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 50%; background: blue"></div>
+  //       </div>
+  //     </div>
+  //     `;
   return markerElement;
 }
 
 function showButton(id: string, buttonText: string) {
   gsap.to(`#${id}-top`, {
-    scale: 2,
+    scale: 12,
+    duration: 0.3,
+    force3D: false,
+    y: "6px",
+  });
+  gsap.to(`#${id}-bottom-left`, {
+    scale: 12,
+    duration: 0.3,
+    force3D: false,
+    x: "7px",
+    y: "-6px",
+  });
+  gsap.to(`#${id}-bottom-right`, {
+    scale: 12,
+    duration: 0.3,
+    force3D: false,
+    x: "-7px",
+    y: "-6px",
+  });
+
+  gsap.set(`#${id}-top`, { opacity: 0, delay: 0.3 });
+  gsap.set(`#${id}-bottom-left`, { opacity: 0, delay: 0.3 });
+  gsap.set(`#${id}-bottom-right`, { opacity: 0, delay: 0.3 });
+}
+
+function hideButton(id: string) {
+  gsap.set(`#${id}-top`, { opacity: 1 });
+  gsap.set(`#${id}-bottom-left`, { opacity: 1 });
+  gsap.set(`#${id}-bottom-right`, { opacity: 1 });
+
+  gsap.to(`#${id}-top`, {
+    scale: 1,
+    duration: 0.3,
+    force3D: false,
+    y: "0",
+  });
+  gsap.to(`#${id}-bottom-left`, {
+    scale: 1,
+    duration: 0.3,
+    force3D: false,
+    x: "0",
+    y: "0",
+  });
+  gsap.to(`#${id}-bottom-right`, {
+    scale: 1,
+    duration: 0.3,
+    force3D: false,
+    x: "0",
+    y: "0",
   });
 }
 
