@@ -1,12 +1,12 @@
 <template>
   <q-page class="row">
-    <NavBar @open-popup="isPopupOpen = true" @close-popup="isPopupOpen = false" />
+    <NavBar @open-popup="showCursor = false" @close-popup="showCursor = true" />
 
     <div class="col-xs-12">
-      <MapComponent @open-popup="isPopupOpen = true" @close-popup="isPopupOpen = false" />
+      <MapComponent @hide-cursor="showCursor = false" @show-cursor="showCursor = true" />
     </div>
 
-    <CursorComponent v-if="!isPopupOpen" />
+    <CursorComponent v-if="showCursor" />
   </q-page>
 </template>
 
@@ -16,7 +16,7 @@ import MapComponent from "src/components/MapComponent.vue";
 import CursorComponent from "src/components/CursorComponent.vue";
 import NavBar from "src/components/NavBar.vue";
 
-const isPopupOpen = ref(false);
+const showCursor = ref(true);
 </script>
 
 <style scoped lang="scss"></style>

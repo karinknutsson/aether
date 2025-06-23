@@ -29,11 +29,12 @@ import SuggestionPopup from "./SuggestionPopup.vue";
 import PopupRect from "./popup-rect.interface";
 import { useSearchStore } from "src/stores/search-store";
 import SuggestButton from "./SuggestButton.vue";
+import gsap from "gsap";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
 
-const emit = defineEmits(["openPopup", "closePopup"]);
+const emit = defineEmits(["hideCursor", "showCursor"]);
 
 let map: any;
 let marker: any;
@@ -71,7 +72,16 @@ onMounted(() => {
   });
 
   features.forEach((feature) => {
-    new mapboxgl.Marker({ element: createCustomMarker("#0a1657") })
+    new mapboxgl.Marker({
+      element: createCustomMarker(
+        createLocationId(
+          `${feature.geometry.coordinates[0]}`,
+          `${feature.geometry.coordinates[1]}`,
+        ),
+        "Open",
+        "#0a1657",
+      ),
+    })
       .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
       .addTo(map);
   });
@@ -121,7 +131,7 @@ onMounted(() => {
         };
       }
 
-      emit("openPopup");
+      emit("hideCursor");
     } else if (hoveredFeatureId !== null) {
       hidePopup();
     }
@@ -132,7 +142,13 @@ onMounted(() => {
     showSuggestionPopup.value = false;
     if (marker) marker.remove();
 
-    marker = new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
+    marker = new mapboxgl.Marker({
+      element: createCustomMarker(
+        createLocationId(e.lngLat.lng, e.lngLat.lat),
+        "Suggest",
+        "#ffffff",
+      ),
+    })
       .setLngLat([e.lngLat.lng, e.lngLat.lat])
       .addTo(map);
 
@@ -146,18 +162,38 @@ onMounted(() => {
   });
 });
 
-function createCustomMarker(color: string) {
+function createLocationId(lng: string, lat: string) {
+  return `lng${lng.replace(".", "-")}lat${lat.replace(".", "-")}`;
+}
+
+function createCustomMarker(id: string, buttonText: string, color: string) {
   const markerElement = document.createElement("div");
+
+  markerElement.addEventListener("mouseenter", () => {
+    showButton(id, buttonText);
+    emit("hideCursor");
+    console.log(id);
+  });
+  markerElement.addEventListener("mouseleave", () => {
+    emit("showCursor");
+  });
+
   markerElement.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
-        <div style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+        <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
         <div style="display: flex; gap: 4px">
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+          <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+          <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
         </div>
       </div>
       `;
   return markerElement;
+}
+
+function showButton(id: string, buttonText: string) {
+  gsap.to(`#${id}-top`, {
+    scale: 2,
+  });
 }
 
 function openSuggestionPopup() {
@@ -183,12 +219,12 @@ function openSuggestionPopup() {
   suggestionPopupRect.value.x = popupX;
   suggestionPopupRect.value.y = popupY;
   showSuggestionPopup.value = true;
-  emit("openPopup");
+  emit("hideCursor");
 }
 
 function hideSuggestionPopup() {
   showSuggestionPopup.value = false;
-  emit("closePopup");
+  emit("showCursor");
 }
 
 function openSuggestButton() {
@@ -204,7 +240,7 @@ function hidePopup() {
   showPopup.value = false;
   hoveredFeatureId = null;
   map.getCanvas().style.cursor = "";
-  emit("closePopup");
+  emit("showCursor");
 }
 
 onUnmounted(() => {
@@ -222,6 +258,7 @@ watch(
   () => searchStore.selectedSuggestion,
   (value) => {
     if (value[0] && value[1]) {
+      showSuggestButton.value = false;
       if (marker) marker.remove();
 
       map.flyTo({
@@ -230,7 +267,9 @@ watch(
         essential: true,
       });
 
-      marker = new mapboxgl.Marker({ element: createCustomMarker("#ffffff") })
+      marker = new mapboxgl.Marker({
+        element: createCustomMarker(createLocationId(value[0], value[1]), "Suggest", "#ffffff"),
+      })
         .setLngLat([value[0], value[1]])
         .addTo(map);
     }

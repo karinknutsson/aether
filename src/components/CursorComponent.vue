@@ -76,10 +76,6 @@ function animate() {
 
   requestAnimationFrame(animate);
 }
-
-// watch(() => props.featureHover, () => {
-
-// })
 </script>
 
 <style scoped lang="scss">
