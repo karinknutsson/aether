@@ -30,6 +30,7 @@ import PopupRect from "./popup-rect.interface";
 import { useSearchStore } from "src/stores/search-store";
 import SuggestButton from "./SuggestButton.vue";
 import gsap from "gsap";
+import { button } from "@primeuix/themes/aura/inputnumber";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
@@ -74,12 +75,9 @@ onMounted(() => {
   features.forEach((feature) => {
     new mapboxgl.Marker({
       element: createCustomMarker(
-        createLocationId(
-          `${feature.geometry.coordinates[0]}`,
-          `${feature.geometry.coordinates[1]}`,
-        ),
+        feature.geometry.coordinates[0] ?? 0,
+        feature.geometry.coordinates[1] ?? 0,
         "Open",
-        "#0a1657",
       ),
     })
       .setLngLat([feature.geometry.coordinates[0], feature.geometry.coordinates[1]])
@@ -143,11 +141,7 @@ onMounted(() => {
     if (marker) marker.remove();
 
     marker = new mapboxgl.Marker({
-      element: createCustomMarker(
-        createLocationId(e.lngLat.lng, e.lngLat.lat),
-        "Suggest",
-        "#ffffff",
-      ),
+      element: createCustomMarker(e.lngLat.lng, e.lngLat.lat, "Suggest"),
     })
       .setLngLat([e.lngLat.lng, e.lngLat.lat])
       .addTo(map);
@@ -162,15 +156,16 @@ onMounted(() => {
   });
 });
 
-function createLocationId(lng: string, lat: string) {
-  return `lng${lng.replace(".", "-")}lat${lat.replace(".", "-")}`;
+function createLocationId(lng: number, lat: number) {
+  return `lng${lng.toString().replace(".", "-")}lat${lat.toString().replace(".", "-")}`;
 }
 
-function createCustomMarker(id: string, buttonText: string, color: string) {
+function createCustomMarker(lng: number, lat: number, buttonText: string) {
+  const id = createLocationId(lng, lat);
   const markerElement = document.createElement("div");
 
   markerElement.addEventListener("mouseenter", () => {
-    showButton(id, buttonText);
+    showButton(lng, lat, id, buttonText);
     emit("hideCursor");
   });
   markerElement.addEventListener("mouseleave", () => {
@@ -179,55 +174,59 @@ function createCustomMarker(id: string, buttonText: string, color: string) {
   });
 
   markerElement.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
-        <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+      <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px); border-radius: 50%; height: 28px; width: 28px">
+        <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
         <div style="display: flex; gap: 4px">
-          <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
-          <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 50%; background: ${color}"></div>
+          <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
+          <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
         </div>
       </div>
-      `;
+       `;
 
-  // markerElement.innerHTML = `
-  //     <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px)">
-  //       <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 50%; background: red"></div>
-  //       <div style="display: flex; gap: 4px">
-  //         <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 50%; background: yellow"></div>
-  //         <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 50%; background: blue"></div>
-  //       </div>
-  //     </div>
-  //     `;
   return markerElement;
 }
 
-function showButton(id: string, buttonText: string) {
+let buttonElement;
+let buttonMarker: any;
+
+function showButton(lng: number, lat: number, id: string, buttonText: string) {
+  setTimeout(() => {
+    buttonElement = document.createElement("div");
+    buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: 120px; height: 120px; border-radius: 50%; background: black; color: white">${buttonText}</button>`;
+
+    buttonMarker = new mapboxgl.Marker({
+      element: buttonElement,
+    })
+      .setLngLat([lng, lat])
+      .addTo(map);
+  }, 300);
+
   gsap.to(`#${id}-top`, {
     scale: 12,
     duration: 0.3,
     force3D: false,
-    y: "6px",
+    y: "12px",
   });
   gsap.to(`#${id}-bottom-left`, {
     scale: 12,
     duration: 0.3,
     force3D: false,
     x: "7px",
-    y: "-6px",
   });
   gsap.to(`#${id}-bottom-right`, {
     scale: 12,
     duration: 0.3,
     force3D: false,
     x: "-7px",
-    y: "-6px",
   });
 
-  gsap.set(`#${id}-top`, { opacity: 0, delay: 0.3 });
-  gsap.set(`#${id}-bottom-left`, { opacity: 0, delay: 0.3 });
-  gsap.set(`#${id}-bottom-right`, { opacity: 0, delay: 0.3 });
+  gsap.set(`#${id}-top`, { opacity: 0.3, delay: 0.3 });
+  gsap.set(`#${id}-bottom-left`, { opacity: 0.3, delay: 0.3 });
+  gsap.set(`#${id}-bottom-right`, { opacity: 0.3, delay: 0.3 });
 }
 
 function hideButton(id: string) {
+  if (buttonMarker) buttonMarker.remove();
   gsap.set(`#${id}-top`, { opacity: 1 });
   gsap.set(`#${id}-bottom-left`, { opacity: 1 });
   gsap.set(`#${id}-bottom-right`, { opacity: 1 });
@@ -243,14 +242,12 @@ function hideButton(id: string) {
     duration: 0.3,
     force3D: false,
     x: "0",
-    y: "0",
   });
   gsap.to(`#${id}-bottom-right`, {
     scale: 1,
     duration: 0.3,
     force3D: false,
     x: "0",
-    y: "0",
   });
 }
 
@@ -326,7 +323,7 @@ watch(
       });
 
       marker = new mapboxgl.Marker({
-        element: createCustomMarker(createLocationId(value[0], value[1]), "Suggest", "#ffffff"),
+        element: createCustomMarker(value[0], value[1], "Suggest"),
       })
         .setLngLat([value[0], value[1]])
         .addTo(map);
