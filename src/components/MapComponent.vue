@@ -30,7 +30,6 @@ import PopupRect from "./popup-rect.interface";
 import { useSearchStore } from "src/stores/search-store";
 import SuggestButton from "./SuggestButton.vue";
 import gsap from "gsap";
-import { button } from "@primeuix/themes/aura/inputnumber";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
@@ -39,6 +38,9 @@ const emit = defineEmits(["hideCursor", "showCursor"]);
 
 let map: any;
 let marker: any;
+let buttonElement;
+let buttonMarker: any;
+let buttonSize = 100;
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
 let hoveredFeatureId: string | null = null;
@@ -99,7 +101,7 @@ onMounted(() => {
       source: "places",
       paint: {
         "circle-color": "transparent",
-        "circle-radius": 18,
+        "circle-radius": buttonSize,
       },
     });
   });
@@ -168,10 +170,6 @@ function createCustomMarker(lng: number, lat: number, buttonText: string) {
     showButton(lng, lat, id, buttonText);
     emit("hideCursor");
   });
-  markerElement.addEventListener("mouseleave", () => {
-    hideButton(id);
-    emit("showCursor");
-  });
 
   markerElement.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px); border-radius: 50%; height: 28px; width: 28px">
@@ -186,43 +184,50 @@ function createCustomMarker(lng: number, lat: number, buttonText: string) {
   return markerElement;
 }
 
-let buttonElement;
-let buttonMarker: any;
-
 function showButton(lng: number, lat: number, id: string, buttonText: string) {
   setTimeout(() => {
     buttonElement = document.createElement("div");
-    buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: 120px; height: 120px; border-radius: 50%; background: black; color: white">${buttonText}</button>`;
+    buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize}px; height: ${buttonSize}px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
+
+    buttonElement.addEventListener("mousedown", () => {
+      hideButton(id);
+      emit("showCursor");
+    });
+
+    buttonElement.addEventListener("mouseleave", () => {
+      hideButton(id);
+      emit("showCursor");
+    });
 
     buttonMarker = new mapboxgl.Marker({
       element: buttonElement,
     })
       .setLngLat([lng, lat])
       .addTo(map);
-  }, 300);
+  }, 290);
 
   gsap.to(`#${id}-top`, {
-    scale: 12,
+    scale: 10,
     duration: 0.3,
     force3D: false,
     y: "12px",
   });
   gsap.to(`#${id}-bottom-left`, {
-    scale: 12,
+    scale: 10,
     duration: 0.3,
     force3D: false,
     x: "7px",
   });
   gsap.to(`#${id}-bottom-right`, {
-    scale: 12,
+    scale: 10,
     duration: 0.3,
     force3D: false,
     x: "-7px",
   });
 
-  gsap.set(`#${id}-top`, { opacity: 0.3, delay: 0.3 });
-  gsap.set(`#${id}-bottom-left`, { opacity: 0.3, delay: 0.3 });
-  gsap.set(`#${id}-bottom-right`, { opacity: 0.3, delay: 0.3 });
+  gsap.set(`#${id}-top`, { opacity: 0, delay: 0.3 });
+  gsap.set(`#${id}-bottom-left`, { opacity: 0, delay: 0.3 });
+  gsap.set(`#${id}-bottom-right`, { opacity: 0, delay: 0.3 });
 }
 
 function hideButton(id: string) {
