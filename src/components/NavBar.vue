@@ -49,6 +49,7 @@ button.nav {
   padding: 0 32px;
   border-radius: 2px;
   pointer-events: auto;
+  width: 140px;
   height: 56px;
 }
 

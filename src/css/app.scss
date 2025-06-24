@@ -103,7 +103,10 @@ button:focus-visible {
   outline: 2px solid $focus-color;
 }
 
-input:-webkit-autofill {
-  box-shadow: 0 0 0 1000px transparent inset !important;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
   -webkit-text-fill-color: #060606 !important;
 }
