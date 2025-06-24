@@ -46,6 +46,7 @@ let isOpeningSuggestionPopup = false;
 const showSuggestButton = ref(false);
 const suggestionPopupRect = ref({ w: 400, h: 300, x: 0, y: 0, lat: 0, lng: 0 } as PopupRect);
 const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
+let isAnimating = false;
 
 const overlayStyle = computed(() => {
   const radius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
@@ -114,6 +115,7 @@ function createCustomMarker(lng: number, lat: number, buttonText: string) {
   const markerElement = document.createElement("div");
 
   markerElement.addEventListener("mouseenter", () => {
+    console.log("mouse enter");
     showButton(lng, lat, id, buttonText);
     emit("hideCursor");
   });
@@ -132,8 +134,10 @@ function createCustomMarker(lng: number, lat: number, buttonText: string) {
 }
 
 function showButton(lng: number, lat: number, id: string, buttonText: string) {
-  if (isOpeningSuggestionPopup || showSuggestionPopup.value || showPopup.value) return;
+  if (isAnimating || isOpeningSuggestionPopup || showSuggestionPopup.value || showPopup.value)
+    return;
 
+  isAnimating = true;
   buttonId = id;
   if (buttonMarker) buttonMarker.remove();
 
@@ -142,6 +146,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize.w}px; height: ${buttonSize.h}px; border-radius: 2px; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
 
     buttonElement.addEventListener("mouseleave", () => {
+      console.log("mouse leave");
       hideButton();
       emit("showCursor");
     });
@@ -185,6 +190,10 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     }
   }, 250);
 
+  setTimeout(() => {
+    isAnimating = false;
+  }, 300);
+
   gsap.to(`#${id}-top`, {
     scaleX: 14,
     scaleY: 5.6,
@@ -192,6 +201,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     duration: 0.3,
     force3D: false,
     y: "12px",
+    ease: "power2.inOut",
   });
   gsap.to(`#${id}-bottom-left`, {
     scaleX: 14,
@@ -200,6 +210,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     duration: 0.3,
     force3D: false,
     x: "7px",
+    ease: "power2.inOut",
   });
   gsap.to(`#${id}-bottom-right`, {
     scaleX: 14,
@@ -208,6 +219,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     duration: 0.3,
     force3D: false,
     x: "-7px",
+    ease: "power2.inOut",
   });
 
   gsap.set(`#${id}-top`, { opacity: 0, delay: 0.3 });
@@ -216,7 +228,14 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
 }
 
 function hideButton() {
+  if (isAnimating) return;
+
+  isAnimating = true;
   if (buttonMarker) buttonMarker.remove();
+
+  setTimeout(() => {
+    isAnimating = false;
+  }, 300);
 
   gsap.set(`#${buttonId}-top`, { opacity: 1 });
   gsap.set(`#${buttonId}-bottom-left`, { opacity: 1 });
@@ -228,6 +247,7 @@ function hideButton() {
     duration: 0.3,
     force3D: false,
     y: "0",
+    ease: "power2.inOut",
   });
   gsap.to(`#${buttonId}-bottom-left`, {
     scale: 1,
@@ -235,6 +255,7 @@ function hideButton() {
     duration: 0.3,
     force3D: false,
     x: "0",
+    ease: "power2.inOut",
   });
   gsap.to(`#${buttonId}-bottom-right`, {
     scale: 1,
@@ -242,6 +263,7 @@ function hideButton() {
     duration: 0.3,
     force3D: false,
     x: "0",
+    ease: "power2.inOut",
   });
 }
 
