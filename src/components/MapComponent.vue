@@ -94,7 +94,7 @@ onMounted(() => {
       source: "places",
       paint: {
         "circle-color": "transparent",
-        "circle-radius": buttonSize,
+        "circle-radius": buttonSize / 2,
       },
     });
   });
@@ -186,7 +186,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize}px; height: ${buttonSize}px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
 
     buttonElement.addEventListener("mouseleave", () => {
-      hideButton(id);
+      hideButton();
       emit("showCursor");
     });
 
@@ -204,7 +204,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
 
       buttonElement.addEventListener("mousedown", () => {
         openSuggestionPopup();
-        hideButton(id);
+        hideButton();
         emit("showCursor");
       });
     }
@@ -234,7 +234,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
   gsap.set(`#${id}-bottom-right`, { opacity: 0, delay: 0.3 });
 }
 
-function hideButton(buttonId: string) {
+function hideButton() {
   if (buttonMarker) buttonMarker.remove();
 
   gsap.set(`#${buttonId}-top`, { opacity: 1 });
