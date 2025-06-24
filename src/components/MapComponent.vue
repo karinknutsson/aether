@@ -4,13 +4,6 @@
   <div ref="mapContainer" id="map" class="map-container"></div>
 
   <PopupComponent v-if="showPopup" :popup="popup" @close="hidePopup" />
-  <SuggestButton
-    v-if="showSuggestButton"
-    :x="suggestButtonCoordinates.x"
-    :y="suggestButtonCoordinates.y"
-    @click="openSuggestionPopup"
-    @close="hideSuggestButton"
-  />
   <SuggestionPopup
     v-if="showSuggestionPopup"
     :popupRect="suggestionPopupRect"
@@ -28,7 +21,6 @@ import { useQuasar } from "quasar";
 import SuggestionPopup from "./SuggestionPopup.vue";
 import PopupRect from "./popup-rect.interface";
 import { useSearchStore } from "src/stores/search-store";
-import SuggestButton from "./SuggestButton.vue";
 import gsap from "gsap";
 
 const $q = useQuasar();
@@ -41,6 +33,7 @@ let marker: any;
 let buttonElement;
 let buttonMarker: any;
 let buttonSize = 100;
+let buttonId = "";
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
 let hoveredFeatureId: string | null = null;
@@ -161,10 +154,10 @@ function createCustomMarker(lng: number, lat: number, buttonText: string, openBu
   const id = createLocationId(lng, lat);
   const markerElement = document.createElement("div");
 
-  if (openButton) {
-    showButton(lng, lat, id, buttonText);
-    emit("hideCursor");
-  }
+  // if (openButton) {
+  //   showButton(lng, lat, id, buttonText);
+  //   emit("hideCursor");
+  // }
 
   markerElement.addEventListener("mouseenter", () => {
     showButton(lng, lat, id, buttonText);
@@ -185,22 +178,12 @@ function createCustomMarker(lng: number, lat: number, buttonText: string, openBu
 }
 
 function showButton(lng: number, lat: number, id: string, buttonText: string) {
+  buttonId = id;
   if (buttonMarker) buttonMarker.remove();
 
   setTimeout(() => {
     buttonElement = document.createElement("div");
     buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize}px; height: ${buttonSize}px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
-
-    if (buttonText === "Suggest") {
-      suggestionPopupRect.value.lng = lng;
-      suggestionPopupRect.value.lat = lat;
-
-      buttonElement.addEventListener("mousedown", () => {
-        openSuggestionPopup();
-        hideButton(id);
-        emit("showCursor");
-      });
-    }
 
     buttonElement.addEventListener("mouseleave", () => {
       hideButton(id);
@@ -212,7 +195,20 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     })
       .setLngLat([lng, lat])
       .addTo(map);
-  }, 290);
+
+    if (buttonText === "Suggest") {
+      suggestionPopupRect.value.x = buttonElement.getBoundingClientRect().left;
+      suggestionPopupRect.value.y = buttonElement.getBoundingClientRect().top;
+      suggestionPopupRect.value.lng = lng;
+      suggestionPopupRect.value.lat = lat;
+
+      buttonElement.addEventListener("mousedown", () => {
+        openSuggestionPopup();
+        hideButton(id);
+        emit("showCursor");
+      });
+    }
+  }, 250);
 
   gsap.to(`#${id}-top`, {
     scale: 10,
@@ -238,25 +234,26 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
   gsap.set(`#${id}-bottom-right`, { opacity: 0, delay: 0.3 });
 }
 
-function hideButton(id: string) {
+function hideButton(buttonId: string) {
   if (buttonMarker) buttonMarker.remove();
-  gsap.set(`#${id}-top`, { opacity: 1 });
-  gsap.set(`#${id}-bottom-left`, { opacity: 1 });
-  gsap.set(`#${id}-bottom-right`, { opacity: 1 });
 
-  gsap.to(`#${id}-top`, {
+  gsap.set(`#${buttonId}-top`, { opacity: 1 });
+  gsap.set(`#${buttonId}-bottom-left`, { opacity: 1 });
+  gsap.set(`#${buttonId}-bottom-right`, { opacity: 1 });
+
+  gsap.to(`#${buttonId}-top`, {
     scale: 1,
     duration: 0.3,
     force3D: false,
     y: "0",
   });
-  gsap.to(`#${id}-bottom-left`, {
+  gsap.to(`#${buttonId}-bottom-left`, {
     scale: 1,
     duration: 0.3,
     force3D: false,
     x: "0",
   });
-  gsap.to(`#${id}-bottom-right`, {
+  gsap.to(`#${buttonId}-bottom-right`, {
     scale: 1,
     duration: 0.3,
     force3D: false,
@@ -278,6 +275,7 @@ function openSuggestionPopup() {
       window.innerHeight - suggestionPopupRect.value.h,
       suggestButtonCoordinates.value.y,
     );
+    console.log(popupX);
   } else {
     // popup coordinates for xs & sm screens
     popupX = 0;
@@ -286,16 +284,13 @@ function openSuggestionPopup() {
   suggestionPopupRect.value.x = popupX;
   suggestionPopupRect.value.y = popupY;
   showSuggestionPopup.value = true;
+  console.log(suggestionPopupRect.value);
   emit("hideCursor");
 }
 
 function hideSuggestionPopup() {
   showSuggestionPopup.value = false;
   emit("showCursor");
-}
-
-function openSuggestButton() {
-  showSuggestButton.value = true;
 }
 
 function hideSuggestButton() {
