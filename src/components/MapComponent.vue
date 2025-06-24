@@ -187,17 +187,17 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
         emit("hideCursor");
       });
     }
-  }, 250);
+  }, 150);
 
   setTimeout(() => {
     isAnimating = false;
-  }, 300);
+  }, 200);
 
   gsap.to(`#${id}-top`, {
     scaleX: 14,
     scaleY: 5.6,
     borderRadius: 0,
-    duration: 0.3,
+    duration: 0.2,
     force3D: false,
     y: "12px",
     ease: "power2.inOut",
@@ -206,7 +206,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     scaleX: 14,
     scaleY: 5.6,
     borderRadius: 0,
-    duration: 0.3,
+    duration: 0.2,
     force3D: false,
     x: "7px",
     ease: "power2.inOut",
@@ -215,15 +215,15 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     scaleX: 14,
     scaleY: 5.6,
     borderRadius: 0,
-    duration: 0.3,
+    duration: 0.2,
     force3D: false,
     x: "-7px",
     ease: "power2.inOut",
   });
 
-  gsap.set(`#${id}-top`, { opacity: 0, delay: 0.3 });
-  gsap.set(`#${id}-bottom-left`, { opacity: 0, delay: 0.3 });
-  gsap.set(`#${id}-bottom-right`, { opacity: 0, delay: 0.3 });
+  gsap.set(`#${id}-top`, { opacity: 0, delay: 0.2 });
+  gsap.set(`#${id}-bottom-left`, { opacity: 0, delay: 0.2 });
+  gsap.set(`#${id}-bottom-right`, { opacity: 0, delay: 0.2 });
 }
 
 function hideButton() {
