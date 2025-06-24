@@ -32,7 +32,7 @@ let map: any;
 let marker: any;
 let buttonElement;
 let buttonMarker: any;
-let buttonSize = 100;
+let buttonSize = { w: 140, h: 56 };
 let buttonId = "";
 const apiKey = process.env.MAPBOX_API_KEY;
 const mapContainer = ref(null);
@@ -42,8 +42,8 @@ const y = ref(0);
 const showOverlay = ref(false);
 const showPopup = ref(false);
 const showSuggestionPopup = ref(false);
+let isOpeningSuggestionPopup = false;
 const showSuggestButton = ref(false);
-const suggestButtonCoordinates = ref({ x: 0, y: 0 });
 const suggestionPopupRect = ref({ w: 400, h: 300, x: 0, y: 0, lat: 0, lng: 0 } as PopupRect);
 const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
 
@@ -87,47 +87,6 @@ onMounted(() => {
         features,
       },
     });
-
-    map.addLayer({
-      id: "places",
-      type: "circle",
-      source: "places",
-      paint: {
-        "circle-color": "transparent",
-        "circle-radius": buttonSize / 2,
-      },
-    });
-  });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  map.on("mousedown", (e: any) => {
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: ["places"],
-    });
-
-    if (features.length > 0) {
-      showOverlay.value = true;
-      const feature = features[0];
-
-      if (hoveredFeatureId !== feature.id) {
-        hoveredFeatureId = feature.id;
-        map.getCanvas().style.cursor = "pointer";
-
-        showPopup.value = true;
-
-        const attachments = JSON.parse(feature.properties.attachments);
-
-        popup.value = {
-          title: feature.properties.description,
-          attachments: attachments,
-          folderName: feature.properties.folderName,
-        };
-      }
-
-      emit("hideCursor");
-    } else if (hoveredFeatureId !== null) {
-      hidePopup();
-    }
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,7 +95,7 @@ onMounted(() => {
     if (marker) marker.remove();
 
     marker = new mapboxgl.Marker({
-      element: createCustomMarker(e.lngLat.lng, e.lngLat.lat, "Suggest", true),
+      element: createCustomMarker(e.lngLat.lng, e.lngLat.lat, "Suggest"),
     })
       .setLngLat([e.lngLat.lng, e.lngLat.lat])
       .addTo(map);
@@ -150,14 +109,9 @@ function createLocationId(lng: number, lat: number) {
   return `lng${lng.toString().replace(".", "-")}lat${lat.toString().replace(".", "-")}`;
 }
 
-function createCustomMarker(lng: number, lat: number, buttonText: string, openButton?: boolean) {
+function createCustomMarker(lng: number, lat: number, buttonText: string) {
   const id = createLocationId(lng, lat);
   const markerElement = document.createElement("div");
-
-  // if (openButton) {
-  //   showButton(lng, lat, id, buttonText);
-  //   emit("hideCursor");
-  // }
 
   markerElement.addEventListener("mouseenter", () => {
     showButton(lng, lat, id, buttonText);
@@ -166,10 +120,10 @@ function createCustomMarker(lng: number, lat: number, buttonText: string, openBu
 
   markerElement.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px); border-radius: 50%; height: 28px; width: 28px">
-        <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
+        <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
         <div style="display: flex; gap: 4px">
-          <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
-          <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
+          <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
+          <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
         </div>
       </div>
        `;
@@ -178,12 +132,14 @@ function createCustomMarker(lng: number, lat: number, buttonText: string, openBu
 }
 
 function showButton(lng: number, lat: number, id: string, buttonText: string) {
+  if (isOpeningSuggestionPopup || showSuggestionPopup.value || showPopup.value) return;
+
   buttonId = id;
   if (buttonMarker) buttonMarker.remove();
 
   setTimeout(() => {
     buttonElement = document.createElement("div");
-    buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize}px; height: ${buttonSize}px; border-radius: 50%; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
+    buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize.w}px; height: ${buttonSize.h}px; border-radius: 2px; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
 
     buttonElement.addEventListener("mouseleave", () => {
       hideButton();
@@ -207,23 +163,48 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
         hideButton();
         emit("showCursor");
       });
+    } else {
+      buttonElement.addEventListener("mousedown", () => {
+        showOverlay.value = true;
+        showPopup.value = true;
+
+        const feature = features.find(
+          (f) => f.geometry.coordinates[0] === lng && f.geometry.coordinates[1] === lat,
+        );
+
+        if (feature) {
+          popup.value = {
+            title: feature.properties.description,
+            attachments: feature.properties.attachments,
+            folderName: feature.properties.folderName,
+          };
+        }
+
+        emit("hideCursor");
+      });
     }
   }, 250);
 
   gsap.to(`#${id}-top`, {
-    scale: 10,
+    scaleX: 14,
+    scaleY: 5.6,
+    borderRadius: 0,
     duration: 0.3,
     force3D: false,
     y: "12px",
   });
   gsap.to(`#${id}-bottom-left`, {
-    scale: 10,
+    scaleX: 14,
+    scaleY: 5.6,
+    borderRadius: 0,
     duration: 0.3,
     force3D: false,
     x: "7px",
   });
   gsap.to(`#${id}-bottom-right`, {
-    scale: 10,
+    scaleX: 14,
+    scaleY: 5.6,
+    borderRadius: 0,
     duration: 0.3,
     force3D: false,
     x: "-7px",
@@ -243,18 +224,21 @@ function hideButton() {
 
   gsap.to(`#${buttonId}-top`, {
     scale: 1,
+    borderRadius: "5px",
     duration: 0.3,
     force3D: false,
     y: "0",
   });
   gsap.to(`#${buttonId}-bottom-left`, {
     scale: 1,
+    borderRadius: "5px",
     duration: 0.3,
     force3D: false,
     x: "0",
   });
   gsap.to(`#${buttonId}-bottom-right`, {
     scale: 1,
+    borderRadius: "5px",
     duration: 0.3,
     force3D: false,
     x: "0",
@@ -262,6 +246,7 @@ function hideButton() {
 }
 
 function openSuggestionPopup() {
+  isOpeningSuggestionPopup = true;
   let popupX = 0;
   let popupY = 0;
 
@@ -269,11 +254,11 @@ function openSuggestionPopup() {
     // popup coordinates for md & larger screens
     popupX = Math.min(
       window.innerWidth - suggestionPopupRect.value.w,
-      suggestButtonCoordinates.value.x,
+      suggestionPopupRect.value.x + 80,
     );
     popupY = Math.min(
       window.innerHeight - suggestionPopupRect.value.h,
-      suggestButtonCoordinates.value.y,
+      suggestionPopupRect.value.y + 20,
     );
   } else {
     // popup coordinates for xs & sm screens
@@ -286,7 +271,8 @@ function openSuggestionPopup() {
 
   setTimeout(() => {
     showSuggestionPopup.value = true;
-  }, 300);
+    isOpeningSuggestionPopup = false;
+  }, 100);
 }
 
 function hideSuggestionPopup() {
