@@ -275,7 +275,6 @@ function openSuggestionPopup() {
       window.innerHeight - suggestionPopupRect.value.h,
       suggestButtonCoordinates.value.y,
     );
-    console.log(popupX);
   } else {
     // popup coordinates for xs & sm screens
     popupX = 0;
@@ -283,9 +282,11 @@ function openSuggestionPopup() {
   }
   suggestionPopupRect.value.x = popupX;
   suggestionPopupRect.value.y = popupY;
-  showSuggestionPopup.value = true;
-  console.log(suggestionPopupRect.value);
   emit("hideCursor");
+
+  setTimeout(() => {
+    showSuggestionPopup.value = true;
+  }, 300);
 }
 
 function hideSuggestionPopup() {
