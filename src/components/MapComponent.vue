@@ -276,11 +276,11 @@ function openSuggestionPopup() {
     // popup coordinates for md & larger screens
     popupX = Math.min(
       window.innerWidth - suggestionPopupRect.value.w,
-      suggestionPopupRect.value.x + 80,
+      suggestionPopupRect.value.x + 100,
     );
     popupY = Math.min(
       window.innerHeight - suggestionPopupRect.value.h,
-      suggestionPopupRect.value.y + 20,
+      suggestionPopupRect.value.y,
     );
   } else {
     // popup coordinates for xs & sm screens
