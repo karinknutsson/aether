@@ -115,7 +115,6 @@ function createCustomMarker(lng: number, lat: number, buttonText: string) {
   const markerElement = document.createElement("div");
 
   markerElement.addEventListener("mouseenter", () => {
-    console.log("mouse enter");
     showButton(lng, lat, id, buttonText);
     emit("hideCursor");
   });
@@ -146,7 +145,6 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
     buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize.w}px; height: ${buttonSize.h}px; border-radius: 2px; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
 
     buttonElement.addEventListener("mouseleave", () => {
-      console.log("mouse leave");
       hideButton();
       emit("showCursor");
     });
@@ -170,6 +168,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
       });
     } else {
       buttonElement.addEventListener("mousedown", () => {
+        console.log("click open");
         showOverlay.value = true;
         showPopup.value = true;
 

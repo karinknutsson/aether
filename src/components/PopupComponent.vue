@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="popup" class="popup-wrapper flex-center">
+    <div ref="popupRef" v-if="popup" class="popup-wrapper flex-center">
       <div class="popup-container">
         <button class="close-button flex-center" @click="emit('close')">
           <i class="pi pi-times icon"></i></button
@@ -15,10 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from "vue";
+import { PropType, ref } from "vue";
 import type Popup from "./popup.interface";
 import ImageFader from "./ImageFader.vue";
 import { useQuasar } from "quasar";
+import { onClickOutside } from "@vueuse/core";
 
 const $q = useQuasar();
 
@@ -30,13 +31,19 @@ defineProps({
 });
 
 const emit = defineEmits(["close"]);
+
+const popupRef = ref();
+
+onClickOutside(popupRef, () => {
+  emit("close");
+});
 </script>
 
 <style scoped lang="scss">
 .popup-wrapper {
   position: absolute;
   left: 0;
-  top: 20vh;
+  top: 12vh;
   width: 100vw;
   pointer-events: none;
 }

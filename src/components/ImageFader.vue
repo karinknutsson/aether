@@ -39,8 +39,6 @@ onMounted(() => {
     isAnimating = true;
     animate();
   }
-
-  console.log(props.images.length);
 });
 
 onUnmounted(() => {
