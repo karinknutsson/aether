@@ -62,6 +62,7 @@
 import { PropType, ref, watch } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import PopupRect from "./popup-rect.interface";
+import isCoordinate from "./is-coordinate";
 
 const props = defineProps({
   popupRect: {
@@ -84,7 +85,9 @@ onClickOutside(popup, () => {
 });
 
 function isFormValid() {
-  return description.value.length > 2 && latitude.value && longitude.value;
+  return (
+    description.value.length > 2 && isCoordinate(longitude.value) && isCoordinate(latitude.value)
+  );
 }
 
 function setFormErrors() {
@@ -113,6 +116,18 @@ watch(description, (value) => {
     errorMessage.value.description = "";
   }
 });
+
+watch(longitude, (value) => {
+  if (errorMessage.value.longitude && isCoordinate(value)) {
+    errorMessage.value.longitude = "";
+  }
+});
+
+watch(latitude, (value) => {
+  if (errorMessage.value.latitude && isCoordinate(value)) {
+    errorMessage.value.latitude = "";
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -124,7 +139,7 @@ button.submit {
   padding: 8px;
   font-size: 18px;
   font-weight: 800;
-  margin-top: 16px;
+  margin-top: 4px;
 }
 
 button.submit:focus {
