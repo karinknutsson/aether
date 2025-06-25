@@ -168,7 +168,6 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
       });
     } else {
       buttonElement.addEventListener("mousedown", () => {
-        console.log("click open");
         showOverlay.value = true;
         showPopup.value = true;
 
@@ -325,22 +324,22 @@ function onMouseDown(e: MouseEvent) {
 }
 
 watch(
-  () => searchStore.selectedSuggestion,
+  () => searchStore.selectedCoordinates,
   (value) => {
-    if (value[0] && value[1]) {
+    if (value.lng && value.lat) {
       showSuggestButton.value = false;
       if (marker) marker.remove();
 
       map.flyTo({
-        center: [value[0], value[1]],
+        center: [value.lng, value.lat],
         zoom: 14,
         essential: true,
       });
 
       marker = new mapboxgl.Marker({
-        element: createCustomMarker(value[0], value[1], "Suggest"),
+        element: createCustomMarker(value.lng, value.lat, "Suggest"),
       })
-        .setLngLat([value[0], value[1]])
+        .setLngLat([value.lng, value.lat])
         .addTo(map);
     }
   },

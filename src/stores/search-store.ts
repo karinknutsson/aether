@@ -7,7 +7,7 @@ export const useSearchStore = defineStore("searchStore", {
   state: () => ({
     sessionToken: "",
     suggestions: [] as any[],
-    selectedSuggestion: [],
+    selectedCoordinates: { lng: 0, lat: 0 },
     brandSuggestions: [],
     loading: false,
     error: null as string | null,
@@ -20,7 +20,8 @@ export const useSearchStore = defineStore("searchStore", {
         const retrieveUrl = `https://api.mapbox.com/search/searchbox/v1/retrieve/${encodedMapboxId}?session_token=${this.sessionToken}&access_token=${token}`;
         const res = await fetch(retrieveUrl);
         const data = await res.json();
-        this.selectedSuggestion = data.features[0].geometry.coordinates;
+        this.selectedCoordinates.lng = data.features[0].geometry.coordinates[0];
+        this.selectedCoordinates.lat = data.features[0].geometry.coordinates[1];
       } catch (err) {
         console.error("Failed to retrieve suggestion details:", err);
       }

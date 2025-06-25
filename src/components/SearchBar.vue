@@ -70,10 +70,12 @@ watch(searchTerm, async (value) => {
   if (!value) return;
 
   if (isCoordinate(value)) {
-    console.log("coordinate");
+    const coordinates = value.split(",");
+    const lat = coordinates[0]?.trim();
+    const lng = coordinates[1]?.trim();
+    if (lat && lng) searchStore.selectedCoordinates = { lng: +lng, lat: +lat };
   } else {
     await searchStore.fetchSuggestions(value);
-    console.log(searchStore.suggestions);
   }
 });
 </script>
