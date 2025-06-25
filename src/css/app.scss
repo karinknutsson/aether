@@ -110,3 +110,18 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
   -webkit-text-fill-color: #060606 !important;
 }
+
+.error-message {
+  height: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 2px;
+
+  .icon {
+    font-size: 14px;
+    transform: translateY(-1px);
+  }
+}

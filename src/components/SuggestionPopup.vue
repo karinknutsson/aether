@@ -18,14 +18,15 @@
           id="description"
           v-model="description"
           type="text"
+          maxlength="240"
         />
+        <div class="error-message">
+          <i v-if="errorMessage.description" class="pi pi-exclamation-circle icon"></i
+          >{{ errorMessage.description }}
+        </div>
       </div>
 
       <div class="lat-lng-container">
-        <div class="input-container lat-lng">
-          <label for="latitude">Latitude</label>
-          <input class="suggestion" name="latitude" id="latitude" v-model="latitude" type="text" />
-        </div>
         <div class="input-container lat-lng">
           <label for="longitude">Longitude</label>
           <input
@@ -35,6 +36,18 @@
             v-model="longitude"
             type="text"
           />
+          <div class="error-message">
+            <i v-if="errorMessage.longitude" class="pi pi-exclamation-circle icon"></i
+            >{{ errorMessage.longitude }}
+          </div>
+        </div>
+        <div class="input-container lat-lng">
+          <label for="latitude">Latitude</label>
+          <input class="suggestion" name="latitude" id="latitude" v-model="latitude" type="text" />
+          <div class="error-message">
+            <i v-if="errorMessage.latitude" class="pi pi-exclamation-circle icon"></i
+            >{{ errorMessage.latitude }}
+          </div>
         </div>
       </div>
 
@@ -46,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref } from "vue";
+import { PropType, ref, watch } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import PopupRect from "./popup-rect.interface";
 
@@ -64,25 +77,28 @@ const longitude = ref(props.popupRect.lng.toFixed(5));
 const description = ref("");
 const popup = ref();
 const isFormSubmitted = ref(false);
+const errorMessage = ref({ description: "", longitude: "", latitude: "" });
 
 onClickOutside(popup, () => {
   emit("close");
 });
 
 function isFormValid() {
-  return description.value && latitude.value && longitude.value;
+  return description.value.length > 2 && latitude.value && longitude.value;
 }
 
 function setFormErrors() {
-  // if (description.value)
+  if (!(description.value.length > 2))
+    errorMessage.value.description = "Please enter a short description.";
+  if (!longitude.value) errorMessage.value.longitude = "The longitude is missing.";
+  if (!latitude.value) errorMessage.value.latitude = "The latitude is missing.";
 }
 
 function submitSuggestion() {
-  if (!isFormValid) {
+  if (!isFormValid()) {
     setFormErrors();
     return;
   }
-  console.log("submit");
 
   isFormSubmitted.value = true;
 
@@ -91,6 +107,12 @@ function submitSuggestion() {
     emit("close");
   }, 3000);
 }
+
+watch(description, (value) => {
+  if (errorMessage.value.description && value.length > 2) {
+    errorMessage.value.description = "";
+  }
+});
 </script>
 
 <style scoped lang="scss">
