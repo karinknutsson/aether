@@ -324,22 +324,22 @@ function onMouseDown(e: MouseEvent) {
 }
 
 watch(
-  () => searchStore.selectedCoordinates,
-  (value) => {
-    if (value.lng && value.lat) {
+  () => [searchStore.selectedCoordinates.lng, searchStore.selectedCoordinates.lat],
+  ([lng, lat]) => {
+    if (lng && lat) {
       showSuggestButton.value = false;
       if (marker) marker.remove();
 
       map.flyTo({
-        center: [value.lng, value.lat],
+        center: [lng, lat],
         zoom: 14,
         essential: true,
       });
 
       marker = new mapboxgl.Marker({
-        element: createCustomMarker(value.lng, value.lat, "Suggest"),
+        element: createCustomMarker(lng, lat, "Suggest"),
       })
-        .setLngLat([value.lng, value.lat])
+        .setLngLat([lng, lat])
         .addTo(map);
     }
   },

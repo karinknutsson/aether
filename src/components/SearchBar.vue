@@ -49,8 +49,15 @@ const searchBarBackground = computed(() => {
   return isSearchFocused.value ? "#ffffff" : "rgba(255, 255, 255, 0.7)";
 });
 
+const searchBarWidth = computed(() => {
+  return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
+    ? "360px"
+    : "140px";
+});
+
 function clearSearchTerm() {
   searchTerm.value = "";
+  searchStore.suggestions = [];
 }
 
 watch(searchTerm, async (value) => {
@@ -99,7 +106,7 @@ li {
   background: v-bind(searchBarBackground);
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   border-radius: 2px;
-  width: 360px;
+  width: v-bind(searchBarWidth);
   height: 56px;
   padding: 0 16px;
 }
