@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useSearchStore } from "src/stores/search-store";
-import isCoordinate from "./is-coordinate";
+import { areCoordinates } from "./is-coordinate";
 
 const searchStore = useSearchStore();
 const searchTerm = ref("");
@@ -56,7 +56,7 @@ function clearSearchTerm() {
 watch(searchTerm, async (value) => {
   if (!value) return;
 
-  if (isCoordinate(value)) {
+  if (areCoordinates(value)) {
     const coordinates = value.split(",");
     const lat = coordinates[0]?.trim();
     const lng = coordinates[1]?.trim();

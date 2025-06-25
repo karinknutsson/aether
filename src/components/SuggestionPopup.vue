@@ -62,7 +62,7 @@
 import { PropType, ref, watch } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import PopupRect from "./popup-rect.interface";
-import isCoordinate from "./is-coordinate";
+import { isCoordinate } from "./is-coordinate";
 
 const props = defineProps({
   popupRect: {
@@ -93,8 +93,8 @@ function isFormValid() {
 function setFormErrors() {
   if (!(description.value.length > 2))
     errorMessage.value.description = "Please enter a short description.";
-  if (!longitude.value) errorMessage.value.longitude = "The longitude is missing.";
-  if (!latitude.value) errorMessage.value.latitude = "The latitude is missing.";
+  if (!isCoordinate(longitude.value)) errorMessage.value.longitude = "The longitude is invalid.";
+  if (!isCoordinate(latitude.value)) errorMessage.value.latitude = "The latitude is invalid.";
 }
 
 function submitSuggestion() {
@@ -102,6 +102,7 @@ function submitSuggestion() {
     setFormErrors();
     return;
   }
+  console.log("submit");
 
   isFormSubmitted.value = true;
 
