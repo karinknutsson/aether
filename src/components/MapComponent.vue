@@ -121,10 +121,10 @@ function createCustomMarker(lng: number, lat: number, buttonText: string) {
 
   markerElement.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; transform: translateY(-2px); border-radius: 50%; height: 28px; width: 28px">
-        <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
+        <div id="${id}-top" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "white" : "#0a1657"}"></div>
         <div style="display: flex; gap: 4px">
-          <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
-          <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "#0a1657" : "white"}"></div>
+          <div id="${id}-bottom-left" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "white" : "#0a1657"}"></div>
+          <div id="${id}-bottom-right" style="width: 10px; height: 10px; border-radius: 5px; background: ${buttonText === "Open" ? "white" : "#0a1657"}"></div>
         </div>
       </div>
        `;
@@ -142,7 +142,7 @@ function showButton(lng: number, lat: number, id: string, buttonText: string) {
 
   setTimeout(() => {
     buttonElement = document.createElement("div");
-    buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize.w}px; height: ${buttonSize.h}px; border-radius: 2px; background: ${buttonText === "Open" ? "#0a1657" : "white"}; color: ${buttonText === "Open" ? "white" : "#0a1657"}">${buttonText}</button>`;
+    buttonElement.innerHTML = `<button id="${id}-button" style="font-family: inherit; font-weight: 700; font-size: 18px; border: 0; width: ${buttonSize.w}px; height: ${buttonSize.h}px; border-radius: 2px; background: ${buttonText === "Open" ? "white" : "#0a1657"}; color: ${buttonText === "Open" ? "#0a1657" : "white"}">${buttonText}</button>`;
 
     buttonElement.addEventListener("mouseleave", () => {
       hideButton();

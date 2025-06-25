@@ -54,7 +54,7 @@
       <button class="submit" type="submit">Send</button>
     </form>
 
-    <div v-else>Thank you for your contribution!</div>
+    <div class="thank-you-text" v-else>Thank you for your contribution!</div>
   </div>
 </template>
 
@@ -173,5 +173,15 @@ button.submit:focus {
 
 .lat-lng {
   flex: 1 1 40%;
+}
+
+.thank-you-text {
+  width: 100%;
+  height: 67%;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
