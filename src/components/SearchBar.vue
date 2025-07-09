@@ -1,11 +1,12 @@
 <template>
-  <div class="search-bar">
+  <div class="search-bar" ref="searchBarRef">
     <form class="search-form">
       <div class="icon-input-container flex-center">
         <button @click="handleClickSearch()" class="search-icon flex-center">
           <i class="pi pi-search icon"></i>
         </button>
         <input
+          v-if="$q.screen.gt.xs || isSearchFocused || searchTerm"
           ref="searchInputRef"
           class="search-input"
           name="searchTerm"
@@ -40,15 +41,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { useSearchStore } from "src/stores/search-store";
 import { areCoordinates } from "./is-coordinate";
 import { useQuasar } from "quasar";
+import { onClickOutside } from "@vueuse/core";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
 const searchTerm = ref("");
 const isSearchFocused = ref(false);
+const searchBarRef = ref<HTMLInputElement | null>(null);
 const searchInputRef = ref<HTMLInputElement | null>(null);
 
 const searchBarBackground = computed(() => {
@@ -77,13 +80,19 @@ function onSelectSuggestion(suggestion: any) {
   searchStore.suggestions = [];
 }
 
-function handleClickSearch() {
+async function handleClickSearch() {
   isSearchFocused.value = true;
+
+  await nextTick();
 
   if (searchInputRef.value) {
     searchInputRef.value.focus();
   }
 }
+
+onClickOutside(searchBarRef, () => {
+  isSearchFocused.value = false;
+});
 
 watch(searchTerm, async (value) => {
   if (!value) return;
@@ -113,7 +122,6 @@ li {
 
 .icon-input-container {
   width: 100%;
-  margin-right: 8px;
 }
 
 .suggestion-list-button {
@@ -168,7 +176,8 @@ li {
   font-size: 16px;
   font-weight: 600;
   width: 100%;
-  margin-left: 8px;
+  // margin-left: 8px;
+  // background: magenta;
 }
 
 .search-icon {
@@ -177,10 +186,6 @@ li {
   padding: 8px;
   background: transparent;
   border-radius: 50%;
-
-  i {
-    font-size: 16px;
-  }
 }
 
 .search-close-button {
@@ -191,10 +196,11 @@ li {
   // height: 24px;
   color: $deep-blue;
   padding: 8px;
+  margin-left: 8px;
+}
 
-  i {
-    font-size: 16px;
-  }
+i {
+  font-size: 22px;
 }
 
 .suggestion-header {
