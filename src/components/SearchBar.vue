@@ -2,7 +2,7 @@
   <div class="search-bar">
     <form class="search-form">
       <div class="flex-center">
-        <div class="search-icon"><i class="pi pi-search icon"></i></div>
+        <div class="search-icon flex-center"><i class="pi pi-search icon"></i></div>
         <input
           class="search-input"
           name="searchTerm"
@@ -23,7 +23,7 @@
   <div v-if="searchStore.suggestions.length" class="search-suggestions">
     <ul>
       <li v-for="suggestion in searchStore.suggestions">
-        <button class="suggestion-list-button" @click="searchStore.selectSuggestion(suggestion)">
+        <button class="suggestion-list-button" @click="onSelectSuggestion(suggestion)">
           <div class="suggestion-header">
             <h3>{{ suggestion.name }}</h3>
           </div>
@@ -57,6 +57,11 @@ const searchBarWidth = computed(() => {
 
 function clearSearchTerm() {
   searchTerm.value = "";
+  searchStore.suggestions = [];
+}
+
+function onSelectSuggestion(suggestion: any) {
+  searchStore.selectSuggestion(suggestion);
   searchStore.suggestions = [];
 }
 
@@ -95,6 +100,7 @@ li {
   background: transparent;
   font-size: 14px;
   padding: 8px;
+  color: inherit;
 }
 
 .suggestion-list-button:hover {
@@ -131,6 +137,7 @@ li {
 
 .search-input {
   background: transparent;
+  color: $deep-blue;
   border: 0;
   padding: 6px 8px;
   font-size: 16px;
@@ -140,7 +147,7 @@ li {
 }
 
 .search-icon {
-  color: #909090;
+  color: $deep-blue;
 
   i {
     font-size: 16px;

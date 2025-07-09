@@ -22,7 +22,7 @@
     </div>
 
     <div class="about-wrapper">
-      <button class="nav">About</button>
+      <button class="nav" @click="emit('openPopup')">About</button>
     </div>
   </div>
 </template>
@@ -40,7 +40,7 @@ const showSearchBar = ref(false);
 button.nav {
   border: 0;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   color: $deep-blue;
   // font-style: italic;
