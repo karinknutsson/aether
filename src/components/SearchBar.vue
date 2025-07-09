@@ -1,15 +1,18 @@
 <template>
   <div class="search-bar">
     <form class="search-form">
-      <div class="flex-center">
-        <div class="search-icon flex-center"><i class="pi pi-search icon"></i></div>
+      <div class="icon-input-container flex-center">
+        <button @click="handleClickSearch()" class="search-icon flex-center">
+          <i class="pi pi-search icon"></i>
+        </button>
         <input
+          ref="searchInputRef"
           class="search-input"
           name="searchTerm"
           id="searchTerm"
           v-model="searchTerm"
           type="text"
-          placeholder="Search"
+          :placeholder="$q.screen.gt.xs ? 'Search' : ''"
           @focus="isSearchFocused = true"
           @blur="isSearchFocused = false"
         />
@@ -40,19 +43,28 @@
 import { computed, ref, watch } from "vue";
 import { useSearchStore } from "src/stores/search-store";
 import { areCoordinates } from "./is-coordinate";
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
 const searchStore = useSearchStore();
 const searchTerm = ref("");
 const isSearchFocused = ref(false);
+const searchInputRef = ref<HTMLInputElement | null>(null);
 
 const searchBarBackground = computed(() => {
   return isSearchFocused.value ? "#ffffff" : "rgba(255, 255, 255, 0.7)";
 });
 
 const searchBarWidth = computed(() => {
-  return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
-    ? "360px"
-    : "140px";
+  if ($q.screen.xs) {
+    return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
+      ? "92vw"
+      : "60px";
+  } else {
+    return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
+      ? "360px"
+      : "140px";
+  }
 });
 
 function clearSearchTerm() {
@@ -63,6 +75,14 @@ function clearSearchTerm() {
 function onSelectSuggestion(suggestion: any) {
   searchStore.selectSuggestion(suggestion);
   searchStore.suggestions = [];
+}
+
+function handleClickSearch() {
+  isSearchFocused.value = true;
+
+  if (searchInputRef.value) {
+    searchInputRef.value.focus();
+  }
 }
 
 watch(searchTerm, async (value) => {
@@ -91,6 +111,11 @@ li {
   padding: 0 8px;
 }
 
+.icon-input-container {
+  width: 100%;
+  margin-right: 8px;
+}
+
 .suggestion-list-button {
   width: 100%;
   display: flex;
@@ -114,7 +139,7 @@ li {
   border-radius: 2px;
   width: v-bind(searchBarWidth);
   height: 56px;
-  padding: 0 16px;
+  padding: 0 8px;
 }
 
 .search-form {
@@ -142,12 +167,16 @@ li {
   padding: 6px 8px;
   font-size: 16px;
   font-weight: 600;
-  width: 260px;
+  width: 100%;
   margin-left: 8px;
 }
 
 .search-icon {
   color: $deep-blue;
+  border: 0;
+  padding: 8px;
+  background: transparent;
+  border-radius: 50%;
 
   i {
     font-size: 16px;
@@ -158,10 +187,10 @@ li {
   background: transparent;
   border: 0;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  color: #909090;
-  padding: 0;
+  // width: 24px;
+  // height: 24px;
+  color: $deep-blue;
+  padding: 8px;
 
   i {
     font-size: 16px;

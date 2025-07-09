@@ -32,8 +32,6 @@ import { ref } from "vue";
 import SearchBar from "./SearchBar.vue";
 
 const emit = defineEmits(["openPopup", "closePopup"]);
-
-const showSearchBar = ref(false);
 </script>
 
 <style scoped lang="scss">
