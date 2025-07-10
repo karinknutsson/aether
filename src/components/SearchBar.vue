@@ -79,6 +79,7 @@ onMounted(() => {
 function clearSearchTerm() {
   searchTerm.value = "";
   searchStore.suggestions = [];
+  onBlurSearch();
 }
 
 function onSelectSuggestion(suggestion: any) {
@@ -117,10 +118,10 @@ async function onOpenSearch() {
 function onBlurSearch() {
   setTimeout(() => {
     isSearchFocused.value = false;
-    searchStore.isSearchOpen = false;
   }, 300);
 
   if (!searchTerm.value) {
+    searchStore.isSearchOpen = false;
     const width = $q.screen.lt.md ? "44px" : "136px";
 
     gsap.to(".search-bar", {
@@ -146,6 +147,8 @@ onClickOutside(searchBarRef, () => {
 watch(searchTerm, async (value) => {
   if (!value) return;
 
+  searchStore.isSearchOpen = true;
+
   if (areCoordinates(value)) {
     const coordinates = value.split(",");
     const lat = coordinates[0]?.trim();
@@ -153,6 +156,12 @@ watch(searchTerm, async (value) => {
     if (lat && lng) searchStore.selectedCoordinates = { lng: +lng, lat: +lat };
   } else {
     await searchStore.fetchSuggestions(value);
+
+    if (searchStore.suggestions.length) {
+      gsap.set(".search-suggestions", {
+        width: searchBarFullWidth.value,
+      });
+    }
   }
 });
 
@@ -169,7 +178,7 @@ watch(searchBarFullWidth, () => {
     });
   }
 
-  if (searchStore.isSearchOpen || searchTerm.value) {
+  if (searchStore.isSearchOpen) {
     gsap.to(".search-bar", {
       duration: 0.3,
       width: searchBarFullWidth.value,
@@ -182,6 +191,12 @@ watch(searchBarFullWidth, () => {
       width,
       ease: "power2.out",
     });
+
+    gsap.to(".search-suggestions", {
+      width: searchBarFullWidth.value,
+      duration: 0.3,
+      ease: "power2.out",
+    });
   }
 });
 </script>
@@ -191,7 +206,8 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 8px 0;
-  width: v-bind(searchBarFullWidth);
+  width: 100%;
+  // width: v-bind(searchBarFullWidth);
 }
 
 li {
@@ -223,7 +239,6 @@ li {
   background: v-bind(searchBarBackground);
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   border-radius: 2px;
-  // width: v-bind(searchBarWidth);
   width: 136px;
   height: 56px;
   padding: 0 8px;
@@ -251,13 +266,10 @@ li {
   background: transparent;
   color: $deep-blue;
   border: 0;
-  //padding: 6px 8px;
   padding: 0;
   font-size: 16px;
   font-weight: 600;
   width: 100%;
-  // margin-left: 8px;
-  // background: magenta;
 }
 
 .search-icon {
@@ -272,8 +284,6 @@ li {
   background: transparent;
   border: 0;
   border-radius: 50%;
-  // width: 24px;
-  // height: 24px;
   color: $deep-blue;
   padding: 8px;
   margin-left: 8px;
