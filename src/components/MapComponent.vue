@@ -34,7 +34,7 @@ let buttonElement;
 let buttonMarker: any;
 let buttonSize = { w: 140, h: 56 };
 let buttonId = "";
-const apiKey = process.env.MAPBOX_API_KEY;
+const apiKey = process.env.VITE_MAPBOX_API_KEY;
 const mapContainer = ref(null);
 let hoveredFeatureId: string | null = null;
 const x = ref(0);
@@ -368,5 +368,6 @@ watch(
 .map-container {
   width: 100%;
   height: 100vh;
+  height: 100dvh;
 }
 </style>

@@ -21,17 +21,51 @@
       <div class="meddon-lowercase">ther</div>
     </div>
 
-    <div class="about-wrapper">
+    <div v-if="$q.screen.gt.xs" class="about-wrapper">
       <button class="nav" @click="emit('openPopup')">About</button>
     </div>
+    <div v-else></div>
   </div>
+
+  <!-- <div v-if="$q.screen.xs" class="mobile-nav">
+    <SearchBar />
+  </div> -->
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { useQuasar } from "quasar";
 import SearchBar from "./SearchBar.vue";
+import gsap from "gsap";
 
+const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
+
+function onMoveSearchUp() {
+  console.log("move up");
+  const height = $q.screen.height;
+  const navContainer = document.querySelector(".mobile-nav");
+
+  if (navContainer) {
+    gsap.to(navContainer, {
+      duration: 0.2,
+      bottom: height / 2 - 64 + "px",
+      ease: "power2.out",
+    });
+  }
+}
+
+function onMoveSearchDown() {
+  console.log("move down");
+  const navContainer = document.querySelector(".mobile-nav");
+
+  if (navContainer) {
+    gsap.to(navContainer, {
+      duration: 0.2,
+      bottom: "64px",
+      ease: "power2.out",
+    });
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -92,5 +126,34 @@ button.nav {
 
 .about-wrapper {
   justify-self: end;
+}
+
+.mobile-nav {
+  position: absolute;
+  top: 100px;
+  width: 100vw;
+  padding: 0 4vw;
+  z-index: 200000;
+}
+
+body.screen--xs {
+  .logo-wrapper {
+    transform: translateY(5px);
+  }
+
+  .meddon-capital {
+    text-transform: uppercase;
+    font-family: "Meddon", cursive;
+    font-size: 40px;
+    transform: translate(6px, 6px);
+    margin: 0;
+  }
+
+  .meddon-lowercase {
+    font-family: "Meddon", cursive;
+    font-size: 40px;
+    transform: translateX(-7px);
+    margin: 0;
+  }
 }
 </style>

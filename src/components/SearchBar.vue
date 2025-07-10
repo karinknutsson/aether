@@ -2,7 +2,7 @@
   <div class="search-bar" ref="searchBarRef">
     <form class="search-form">
       <div class="icon-input-container flex-center">
-        <button @click="handleClickSearch()" class="search-icon flex-center">
+        <button @click="onClickSearch()" class="search-icon flex-center">
           <i class="pi pi-search icon"></i>
         </button>
         <input
@@ -53,6 +53,7 @@ const searchTerm = ref("");
 const isSearchFocused = ref(false);
 const searchBarRef = ref<HTMLInputElement | null>(null);
 const searchInputRef = ref<HTMLInputElement | null>(null);
+const emit = defineEmits(["openSearch", "closeSearch"]);
 
 const searchBarBackground = computed(() => {
   return isSearchFocused.value ? "#ffffff" : "rgba(255, 255, 255, 0.7)";
@@ -90,8 +91,30 @@ async function handleClickSearch() {
   }
 }
 
-onClickOutside(searchBarRef, () => {
+async function onClickSearch() {
+  isSearchFocused.value = true;
+
+  if ($q.screen.xs) {
+    emit("openSearch");
+  }
+
+  await nextTick();
+
+  if (searchInputRef.value) {
+    searchInputRef.value.focus();
+  }
+}
+
+function onBlurSearch() {
   isSearchFocused.value = false;
+
+  if ($q.screen.xs) {
+    emit("closeSearch");
+  }
+}
+
+onClickOutside(searchBarRef, () => {
+  onBlurSearch();
 });
 
 watch(searchTerm, async (value) => {
