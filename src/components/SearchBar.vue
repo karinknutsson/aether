@@ -53,7 +53,6 @@ const searchTerm = ref("");
 const isSearchFocused = ref(false);
 const searchBarRef = ref<HTMLInputElement | null>(null);
 const searchInputRef = ref<HTMLInputElement | null>(null);
-const emit = defineEmits(["openSearch", "closeSearch"]);
 
 const searchBarBackground = computed(() => {
   return isSearchFocused.value ? "#ffffff" : "rgba(255, 255, 255, 0.7)";
@@ -69,10 +68,6 @@ const searchBarFullWidth = computed(() => {
   }
 });
 
-const isSearchOpen = computed(() => {
-  return isSearchFocused.value || searchTerm.value;
-});
-
 function clearSearchTerm() {
   searchTerm.value = "";
   searchStore.suggestions = [];
@@ -84,13 +79,10 @@ function onSelectSuggestion(suggestion: any) {
 }
 
 async function onOpenSearch() {
-  if (isSearchOpen.value) return;
+  if (searchStore.isSearchOpen) return;
 
+  searchStore.isSearchOpen = true;
   isSearchFocused.value = true;
-
-  if ($q.screen.lt.md) {
-    emit("openSearch");
-  }
 
   const delay = $q.screen.lt.md ? 0.2 : 0;
 
@@ -117,11 +109,8 @@ async function onOpenSearch() {
 function onBlurSearch() {
   setTimeout(() => {
     isSearchFocused.value = false;
+    searchStore.isSearchOpen = false;
   }, 300);
-
-  if ($q.screen.lt.md) {
-    emit("closeSearch");
-  }
 
   if (!searchTerm.value) {
     const width = $q.screen.lt.md ? "44px" : "136px";
@@ -158,7 +147,7 @@ watch(searchTerm, async (value) => {
 });
 
 watch(searchBarFullWidth, () => {
-  if (isSearchOpen.value) {
+  if (searchStore.isSearchOpen) {
     gsap.to(".search-bar", {
       duration: 0.3,
       width: searchBarFullWidth.value,

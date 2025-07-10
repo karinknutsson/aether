@@ -11,6 +11,7 @@ export const useSearchStore = defineStore("searchStore", {
     brandSuggestions: [],
     loading: false,
     error: null as string | null,
+    isSearchOpen: false,
   }),
 
   actions: {

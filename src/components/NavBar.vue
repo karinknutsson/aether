@@ -1,7 +1,7 @@
 <template>
   <div class="navbar-container">
     <div class="search-wrapper">
-      <SearchBar @open-search="handleOpenSearch" @close-search="handleCloseSearch" />
+      <SearchBar />
     </div>
 
     <div class="logo-wrapper">
@@ -24,11 +24,16 @@
 import { useQuasar } from "quasar";
 import SearchBar from "./SearchBar.vue";
 import gsap from "gsap";
+import { useSearchStore } from "src/stores/search-store";
+import { watch } from "vue";
 
+const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
 
 function handleOpenSearch() {
+  if ($q.screen.gt.sm) return;
+
   gsap.to(".logo-wrapper", {
     duration: 0.2,
     opacity: 0,
@@ -43,6 +48,8 @@ function handleOpenSearch() {
 }
 
 function handleCloseSearch() {
+  if ($q.screen.gt.sm) return;
+
   gsap.to(".logo-wrapper", {
     duration: 0.2,
     opacity: 1,
@@ -57,6 +64,17 @@ function handleCloseSearch() {
     delay: 0.3,
   });
 }
+
+watch(
+  () => searchStore.isSearchOpen,
+  (isOpen) => {
+    if (isOpen) {
+      handleOpenSearch();
+    } else {
+      handleCloseSearch();
+    }
+  },
+);
 </script>
 
 <style scoped lang="scss">
