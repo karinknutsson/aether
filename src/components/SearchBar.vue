@@ -63,7 +63,7 @@ const searchBarWidth = computed(() => {
   if ($q.screen.xs) {
     return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
       ? "92vw"
-      : "60px";
+      : "44px";
   } else {
     return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
       ? "360px"
@@ -232,6 +232,17 @@ i {
     font-size: 14px;
     margin: 0;
     line-height: 120%;
+  }
+}
+
+body.screen--xs {
+  .search-bar {
+    height: 44px;
+    padding: 0 5px;
+  }
+
+  i {
+    font-size: 18px;
   }
 }
 </style>
