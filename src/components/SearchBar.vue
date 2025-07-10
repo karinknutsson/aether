@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, nextTick } from "vue";
+import { computed, ref, watch, nextTick, onMounted } from "vue";
 import { useSearchStore } from "src/stores/search-store";
 import { areCoordinates } from "./is-coordinate";
 import { useQuasar } from "quasar";
@@ -65,6 +65,14 @@ const searchBarFullWidth = computed(() => {
     return "340px";
   } else {
     return "420px";
+  }
+});
+
+onMounted(() => {
+  if ($q.screen.gt.sm) {
+    gsap.set(".search-input", {
+      padding: "6px 8px",
+    });
   }
 });
 
@@ -121,11 +129,13 @@ function onBlurSearch() {
       ease: "power2.out",
     });
 
-    gsap.to(".search-input", {
-      padding: "0",
-      duration: 0.1,
-      delay: 0.2,
-    });
+    if ($q.screen.lt.md) {
+      gsap.to(".search-input", {
+        padding: "0",
+        duration: 0.1,
+        delay: 0.2,
+      });
+    }
   }
 }
 
@@ -147,7 +157,19 @@ watch(searchTerm, async (value) => {
 });
 
 watch(searchBarFullWidth, () => {
-  if (searchStore.isSearchOpen) {
+  if ($q.screen.lt.md) {
+    gsap.to(".search-input", {
+      padding: "0",
+      duration: 0.1,
+    });
+  } else {
+    gsap.to(".search-input", {
+      padding: "6px 8px",
+      duration: 0.1,
+    });
+  }
+
+  if (searchStore.isSearchOpen || searchTerm.value) {
     gsap.to(".search-bar", {
       duration: 0.3,
       width: searchBarFullWidth.value,
