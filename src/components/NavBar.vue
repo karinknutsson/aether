@@ -138,21 +138,21 @@ button.nav {
 
 body.screen--xs {
   .logo-wrapper {
-    transform: translateY(5px);
+    transform: translateY(4px);
   }
 
   .meddon-capital {
     text-transform: uppercase;
     font-family: "Meddon", cursive;
-    font-size: 40px;
-    transform: translate(6px, 6px);
+    font-size: 36px;
+    transform: translate(5px, 5px);
     margin: 0;
   }
 
   .meddon-lowercase {
     font-family: "Meddon", cursive;
-    font-size: 40px;
-    transform: translateX(-7px);
+    font-size: 36px;
+    transform: translateX(-6px);
     margin: 0;
   }
 }
