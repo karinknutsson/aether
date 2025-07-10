@@ -2,11 +2,10 @@
   <div class="search-bar" ref="searchBarRef">
     <form class="search-form">
       <div class="icon-input-container flex-center">
-        <button @click="onClickSearch()" class="search-icon flex-center">
+        <button @click="onOpenSearch" class="search-icon flex-center">
           <i class="pi pi-search icon"></i>
         </button>
         <input
-          v-if="$q.screen.gt.xs || isSearchFocused || searchTerm"
           ref="searchInputRef"
           class="search-input"
           name="searchTerm"
@@ -14,8 +13,8 @@
           v-model="searchTerm"
           type="text"
           :placeholder="$q.screen.gt.xs ? 'Search' : ''"
-          @focus="isSearchFocused = true"
-          @blur="isSearchFocused = false"
+          @focus="onOpenSearch"
+          @blur="onBlurSearch"
         />
       </div>
       <button v-if="searchTerm" class="search-close-button flex-center" @click="clearSearchTerm">
@@ -46,6 +45,7 @@ import { useSearchStore } from "src/stores/search-store";
 import { areCoordinates } from "./is-coordinate";
 import { useQuasar } from "quasar";
 import { onClickOutside } from "@vueuse/core";
+import gsap from "gsap";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
@@ -59,17 +59,19 @@ const searchBarBackground = computed(() => {
   return isSearchFocused.value ? "#ffffff" : "rgba(255, 255, 255, 0.7)";
 });
 
-const searchBarWidth = computed(() => {
-  if ($q.screen.xs) {
-    return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
-      ? "92vw"
-      : "44px";
+const searchBarFullWidth = computed(() => {
+  if ($q.screen.lt.md) {
+    return "92vw";
+  } else if ($q.screen.md) {
+    return "340px";
   } else {
-    return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length
-      ? "360px"
-      : "140px";
+    return "420px";
   }
 });
+
+// const isSearchOpen = computed(() => {
+//   return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length > 0;
+// });
 
 function clearSearchTerm() {
   searchTerm.value = "";
@@ -81,22 +83,29 @@ function onSelectSuggestion(suggestion: any) {
   searchStore.suggestions = [];
 }
 
-async function handleClickSearch() {
-  isSearchFocused.value = true;
+async function onOpenSearch() {
+  if (isSearchFocused.value || searchTerm.value) return;
 
-  await nextTick();
-
-  if (searchInputRef.value) {
-    searchInputRef.value.focus();
-  }
-}
-
-async function onClickSearch() {
   isSearchFocused.value = true;
 
   if ($q.screen.xs) {
     emit("openSearch");
   }
+
+  const delay = $q.screen.lt.md ? 0.2 : 0;
+
+  gsap.to(".search-bar", {
+    duration: 0.3,
+    width: searchBarFullWidth.value,
+    ease: "power2.out",
+    delay,
+  });
+
+  gsap.to(".search-input", {
+    padding: "6px 8px",
+    duration: 0.1,
+    delay: 0.2,
+  });
 
   await nextTick();
 
@@ -106,10 +115,28 @@ async function onClickSearch() {
 }
 
 function onBlurSearch() {
-  isSearchFocused.value = false;
+  setTimeout(() => {
+    isSearchFocused.value = false;
+  }, 300);
 
   if ($q.screen.xs) {
     emit("closeSearch");
+  }
+
+  if (!searchTerm.value) {
+    const width = $q.screen.xs ? "44px" : "136px";
+
+    gsap.to(".search-bar", {
+      duration: 0.3,
+      width,
+      ease: "power2.out",
+    });
+
+    gsap.to(".search-input", {
+      padding: "0",
+      duration: 0.1,
+      delay: 0.2,
+    });
   }
 }
 
@@ -129,6 +156,16 @@ watch(searchTerm, async (value) => {
     await searchStore.fetchSuggestions(value);
   }
 });
+
+watch(searchBarFullWidth, () => {
+  //if (isSearchOpen.value) {
+  gsap.to(".search-bar", {
+    duration: 0.3,
+    width: searchBarFullWidth.value,
+    ease: "power2.out",
+  });
+  //}
+});
 </script>
 
 <style scoped lang="scss">
@@ -136,7 +173,7 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 8px 0;
-  width: 360px;
+  width: v-bind(searchBarFullWidth);
 }
 
 li {
@@ -168,7 +205,8 @@ li {
   background: v-bind(searchBarBackground);
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   border-radius: 2px;
-  width: v-bind(searchBarWidth);
+  // width: v-bind(searchBarWidth);
+  width: 136px;
   height: 56px;
   padding: 0 8px;
 }
@@ -195,7 +233,8 @@ li {
   background: transparent;
   color: $deep-blue;
   border: 0;
-  padding: 6px 8px;
+  //padding: 6px 8px;
+  padding: 0;
   font-size: 16px;
   font-weight: 600;
   width: 100%;
@@ -237,6 +276,7 @@ i {
 
 body.screen--xs {
   .search-bar {
+    width: 44px;
     height: 44px;
     padding: 0 5px;
   }

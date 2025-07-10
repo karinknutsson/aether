@@ -13,7 +13,7 @@
     </button> -->
 
     <div class="search-wrapper">
-      <SearchBar />
+      <SearchBar @open-search="handleOpenSearch" @close-search="handleCloseSearch" />
     </div>
 
     <div class="logo-wrapper">
@@ -40,31 +40,23 @@ import gsap from "gsap";
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
 
-function onMoveSearchUp() {
-  console.log("move up");
-  const height = $q.screen.height;
-  const navContainer = document.querySelector(".mobile-nav");
-
-  if (navContainer) {
-    gsap.to(navContainer, {
-      duration: 0.2,
-      bottom: height / 2 - 64 + "px",
-      ease: "power2.out",
-    });
-  }
+function handleOpenSearch() {
+  console.log("open search");
+  gsap.to(".logo-wrapper", {
+    duration: 0.2,
+    opacity: 0,
+    ease: "power2.out",
+  });
 }
 
-function onMoveSearchDown() {
-  console.log("move down");
-  const navContainer = document.querySelector(".mobile-nav");
-
-  if (navContainer) {
-    gsap.to(navContainer, {
-      duration: 0.2,
-      bottom: "64px",
-      ease: "power2.out",
-    });
-  }
+function handleCloseSearch() {
+  console.log("close search");
+  gsap.to(".logo-wrapper", {
+    duration: 0.2,
+    opacity: 1,
+    ease: "power2.out",
+    delay: 0.3,
+  });
 }
 </script>
 
@@ -136,6 +128,7 @@ button.nav {
   z-index: 200000;
 }
 
+body.screen--sm,
 body.screen--xs {
   .logo-wrapper {
     transform: translateY(4px);
