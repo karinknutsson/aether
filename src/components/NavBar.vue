@@ -1,17 +1,5 @@
 <template>
   <div class="navbar-container">
-    <!-- <button
-      class="nav"
-      @click="
-        () => {
-          emit('openPopup');
-          showSearchBar = true;
-        }
-      "
-    >
-      Search
-    </button> -->
-
     <div class="search-wrapper">
       <SearchBar @open-search="handleOpenSearch" @close-search="handleCloseSearch" />
     </div>
@@ -21,15 +9,15 @@
       <div class="meddon-lowercase">ther</div>
     </div>
 
-    <div v-if="$q.screen.gt.xs" class="about-wrapper">
-      <button class="nav" @click="emit('openPopup')">About</button>
+    <div class="about-wrapper">
+      <button v-if="$q.screen.gt.sm" class="nav-btn desktop" @click="emit('openPopup')">
+        About
+      </button>
+      <button v-else class="nav-btn mobile" @click="emit('openPopup')">
+        <i class="pi pi-info-circle icon"></i>
+      </button>
     </div>
-    <div v-else></div>
   </div>
-
-  <!-- <div v-if="$q.screen.xs" class="mobile-nav">
-    <SearchBar />
-  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -41,8 +29,13 @@ const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
 
 function handleOpenSearch() {
-  console.log("open search");
   gsap.to(".logo-wrapper", {
+    duration: 0.2,
+    opacity: 0,
+    ease: "power2.out",
+  });
+
+  gsap.to(".nav-btn", {
     duration: 0.2,
     opacity: 0,
     ease: "power2.out",
@@ -50,8 +43,14 @@ function handleOpenSearch() {
 }
 
 function handleCloseSearch() {
-  console.log("close search");
   gsap.to(".logo-wrapper", {
+    duration: 0.2,
+    opacity: 1,
+    ease: "power2.out",
+    delay: 0.3,
+  });
+
+  gsap.to(".nav-btn", {
     duration: 0.2,
     opacity: 1,
     ease: "power2.out",
@@ -61,20 +60,35 @@ function handleCloseSearch() {
 </script>
 
 <style scoped lang="scss">
-button.nav {
+button.nav-btn {
   border: 0;
+  color: $deep-blue;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
+  border-radius: 2px;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.desktop {
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
-  color: $deep-blue;
   // font-style: italic;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   padding: 0 32px;
-  border-radius: 2px;
-  pointer-events: auto;
   width: 140px;
   height: 56px;
+}
+
+button.mobile {
+  width: 44px;
+  height: 44px;
+
+  i {
+    font-size: 20px;
+  }
 }
 
 .navbar-container {
@@ -118,14 +132,6 @@ button.nav {
 
 .about-wrapper {
   justify-self: end;
-}
-
-.mobile-nav {
-  position: absolute;
-  top: 100px;
-  width: 100vw;
-  padding: 0 4vw;
-  z-index: 200000;
 }
 
 body.screen--sm,
