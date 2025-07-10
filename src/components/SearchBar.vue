@@ -69,9 +69,9 @@ const searchBarFullWidth = computed(() => {
   }
 });
 
-// const isSearchOpen = computed(() => {
-//   return isSearchFocused.value || searchTerm.value || searchStore.suggestions.length > 0;
-// });
+const isSearchOpen = computed(() => {
+  return isSearchFocused.value || searchTerm.value;
+});
 
 function clearSearchTerm() {
   searchTerm.value = "";
@@ -84,11 +84,11 @@ function onSelectSuggestion(suggestion: any) {
 }
 
 async function onOpenSearch() {
-  if (isSearchFocused.value || searchTerm.value) return;
+  if (isSearchOpen.value) return;
 
   isSearchFocused.value = true;
 
-  if ($q.screen.xs) {
+  if ($q.screen.lt.md) {
     emit("openSearch");
   }
 
@@ -119,12 +119,12 @@ function onBlurSearch() {
     isSearchFocused.value = false;
   }, 300);
 
-  if ($q.screen.xs) {
+  if ($q.screen.lt.md) {
     emit("closeSearch");
   }
 
   if (!searchTerm.value) {
-    const width = $q.screen.xs ? "44px" : "136px";
+    const width = $q.screen.lt.md ? "44px" : "136px";
 
     gsap.to(".search-bar", {
       duration: 0.3,
@@ -158,13 +158,20 @@ watch(searchTerm, async (value) => {
 });
 
 watch(searchBarFullWidth, () => {
-  //if (isSearchOpen.value) {
-  gsap.to(".search-bar", {
-    duration: 0.3,
-    width: searchBarFullWidth.value,
-    ease: "power2.out",
-  });
-  //}
+  if (isSearchOpen.value) {
+    gsap.to(".search-bar", {
+      duration: 0.3,
+      width: searchBarFullWidth.value,
+      ease: "power2.out",
+    });
+  } else {
+    const width = $q.screen.lt.md ? "44px" : "136px";
+    gsap.to(".search-bar", {
+      duration: 0.3,
+      width,
+      ease: "power2.out",
+    });
+  }
 });
 </script>
 
@@ -274,6 +281,7 @@ i {
   }
 }
 
+body.screen--sm,
 body.screen--xs {
   .search-bar {
     width: 44px;
