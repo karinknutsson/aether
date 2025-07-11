@@ -1,15 +1,16 @@
 import type Feature from "./feature.interface";
 
+function createImageArray(count: number) {
+  return Array.from({ length: count }, (_, i) => `${i}.jpg`);
+}
+
 export const features: Feature[] = [
   {
     type: "Feature",
     properties: {
-      description: "Soviet War Memorial Treptow",
-      attachments: [
-        "example-images/merzouga.jpg",
-        "example-images/chellah-storks.jpg",
-        "example-images/meknes-medina.jpg",
-      ],
+      description: "Treptower Park",
+      attachments: createImageArray(8),
+      folderName: "treptower-park",
     },
     geometry: {
       type: "Point",
@@ -21,6 +22,7 @@ export const features: Feature[] = [
     properties: {
       description: "Grunewald",
       attachments: [],
+      folderName: "grunewald",
     },
     geometry: {
       type: "Point",
@@ -31,11 +33,8 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Tiergarten",
-      attachments: [
-        "example-images/merzouga.jpg",
-        "example-images/chellah-storks.jpg",
-        "example-images/meknes-medina.jpg",
-      ],
+      attachments: [],
+      folderName: "tiergarten",
     },
     geometry: {
       type: "Point",
@@ -46,19 +45,12 @@ export const features: Feature[] = [
     type: "Feature",
     properties: {
       description: "Volkspark Prenzlauer Berg",
-      attachments: [
-        "example-images/merzouga.jpg",
-        "example-images/chellah-storks.jpg",
-        "example-images/meknes-medina.jpg",
-      ],
+      attachments: createImageArray(4),
+      folderName: "volkspark-prenzlauer-berg",
     },
     geometry: {
       type: "Point",
       coordinates: [13.464988, 52.535379],
     },
   },
-  //   { lat:, lng: , title: 'Grunewald' },
-  //   { lat: 52.512238, lng: 13.340973, title: 'Tiergarten' },
-  //   { lat: 54.13259, lng: 13.432281, title: 'Wampen' },
-  //   { lat: 52.535379, lng: 13.464988, title: 'Volkspark Prenzlauer Berg' },
 ];

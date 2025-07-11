@@ -1,7 +1,7 @@
 <template>
   <div v-if="images.length" class="img-container">
     <div v-for="(image, index) in images" :key="image" class="img-wrapper">
-      <img :src="image" :class="`image-${index}`" />
+      <img :src="`/images/${folderName}/${image}`" :class="`image-${index}`" />
     </div>
     <div class="title-wrapper">
       <h2>{{ title }}</h2>
@@ -19,6 +19,10 @@ const props = defineProps({
     required: true,
   },
   title: {
+    type: String,
+    required: true,
+  },
+  folderName: {
     type: String,
     required: true,
   },
@@ -69,9 +73,9 @@ function animate() {
 </script>
 
 <style scoped lang="scss">
-img {
-  filter: grayscale(100%) sepia(33%) hue-rotate(200deg) saturate(160%);
-}
+// img {
+//   filter: grayscale(100%) sepia(33%) hue-rotate(200deg) saturate(160%);
+// }
 
 .img-container {
   position: relative;
@@ -84,6 +88,7 @@ img {
   width: 100%;
   height: calc(100% - 40px);
   overflow: hidden;
+  border-radius: 2px;
 
   img {
     width: 100%;
