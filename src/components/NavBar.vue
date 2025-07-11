@@ -10,11 +10,14 @@
     </div>
 
     <div class="about-wrapper">
-      <button v-if="$q.screen.gt.sm" class="nav-btn desktop" @click="emit('openPopup')">
-        About
-      </button>
-      <button v-else class="nav-btn mobile" @click="emit('openPopup')">
-        <i class="pi pi-info-circle icon"></i>
+      <button
+        type="button"
+        class="nav-btn"
+        :class="$q.screen.gt.sm ? 'desktop' : 'mobile'"
+        @click="handleOpenInfo"
+      >
+        <template v-if="$q.screen.gt.sm">About</template
+        ><i v-else class="pi pi-info-circle icon"></i>
       </button>
     </div>
   </div>
@@ -31,12 +34,25 @@ const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
 
-function handleOpenSearch() {
+function hideLogo() {
   gsap.to(".logo-wrapper", {
     duration: 0.2,
     opacity: 0,
     ease: "power2.out",
   });
+}
+
+function showLogo() {
+  gsap.to(".logo-wrapper", {
+    duration: 0.2,
+    opacity: 1,
+    ease: "power2.out",
+    delay: 0.3,
+  });
+}
+
+function handleOpenSearch() {
+  hideLogo();
 
   gsap.to(".nav-btn", {
     duration: 0.2,
@@ -46,14 +62,32 @@ function handleOpenSearch() {
 }
 
 function handleCloseSearch() {
-  gsap.to(".logo-wrapper", {
+  showLogo();
+
+  gsap.to(".nav-btn", {
     duration: 0.2,
     opacity: 1,
     ease: "power2.out",
     delay: 0.3,
   });
+}
 
-  gsap.to(".nav-btn", {
+function handleOpenInfo() {
+  emit("openPopup");
+  hideLogo();
+
+  gsap.to(".search-wrapper", {
+    duration: 0.2,
+    opacity: 0,
+    ease: "power2.out",
+  });
+}
+
+function handleCloseInfo() {
+  emit("closePopup");
+  showLogo();
+
+  gsap.to(".search-wrapper", {
     duration: 0.2,
     opacity: 1,
     ease: "power2.out",

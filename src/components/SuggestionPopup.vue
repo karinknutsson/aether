@@ -18,7 +18,7 @@
           id="description"
           v-model="description"
           type="text"
-          maxlength="240"
+          maxlength="45"
         />
         <div class="error-message">
           <i v-if="errorMessage.description" class="pi pi-exclamation-circle icon"></i
