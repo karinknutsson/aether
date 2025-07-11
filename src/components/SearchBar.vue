@@ -2,7 +2,7 @@
   <div class="search-bar" ref="searchBarRef">
     <form class="search-form">
       <div class="icon-input-container flex-center">
-        <button @click="onOpenSearch" class="search-icon flex-center">
+        <button type="button" @click="onOpenSearch" class="search-icon flex-center">
           <i class="pi pi-search icon"></i>
         </button>
         <input
@@ -17,7 +17,12 @@
           @blur="onBlurSearch"
         />
       </div>
-      <button v-if="searchTerm" class="search-close-button flex-center" @click="clearSearchTerm">
+      <button
+        type="button"
+        v-if="searchTerm"
+        class="search-close-button flex-center"
+        @click="clearSearchTerm"
+      >
         <i class="pi pi-times icon"></i>
       </button>
     </form>
@@ -183,18 +188,22 @@ watch(searchBarFullWidth, () => {
       duration: 0.3,
       width: searchBarFullWidth.value,
       ease: "power2.out",
+      delay: 0.2,
     });
+
+    if (searchStore.suggestions.length) {
+      gsap.to(".search-suggestions", {
+        width: searchBarFullWidth.value,
+        duration: 0.3,
+        ease: "power2.out",
+        delay: 0.2,
+      });
+    }
   } else {
     const width = $q.screen.lt.md ? "44px" : "136px";
     gsap.to(".search-bar", {
       duration: 0.3,
       width,
-      ease: "power2.out",
-    });
-
-    gsap.to(".search-suggestions", {
-      width: searchBarFullWidth.value,
-      duration: 0.3,
       ease: "power2.out",
     });
   }

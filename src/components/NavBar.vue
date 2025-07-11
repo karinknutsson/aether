@@ -32,8 +32,6 @@ const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
 
 function handleOpenSearch() {
-  if ($q.screen.gt.sm) return;
-
   gsap.to(".logo-wrapper", {
     duration: 0.2,
     opacity: 0,
@@ -48,8 +46,6 @@ function handleOpenSearch() {
 }
 
 function handleCloseSearch() {
-  if ($q.screen.gt.sm) return;
-
   gsap.to(".logo-wrapper", {
     duration: 0.2,
     opacity: 1,
@@ -66,8 +62,21 @@ function handleCloseSearch() {
 }
 
 watch(
+  () => $q.screen.gt.sm,
+  (isDesktop) => {
+    if (isDesktop) {
+      handleCloseSearch();
+    } else if (searchStore.isSearchOpen) {
+      handleOpenSearch();
+    }
+  },
+);
+
+watch(
   () => searchStore.isSearchOpen,
   (isOpen) => {
+    if ($q.screen.gt.sm) return;
+
     if (isOpen) {
       handleOpenSearch();
     } else {
