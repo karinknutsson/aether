@@ -20,19 +20,30 @@
         ><i v-else class="pi pi-info-circle icon"></i>
       </button>
     </div>
+
+    <div class="about-popup">
+      <template v-if="isAboutOpen">
+        <div class="close-wrapper">
+          <button type="button" class="close-button flex-center" @click="handleCloseInfo">
+            <i class="pi pi-times icon"></i>
+          </button>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from "quasar";
+import { is, useQuasar } from "quasar";
 import SearchBar from "./SearchBar.vue";
 import gsap from "gsap";
 import { useSearchStore } from "src/stores/search-store";
-import { watch } from "vue";
+import { ref, watch } from "vue";
 
 const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
+const isAboutOpen = ref(false);
 
 function hideLogo() {
   gsap.to(".logo-wrapper", {
@@ -73,6 +84,10 @@ function handleCloseSearch() {
 }
 
 function handleOpenInfo() {
+  setTimeout(() => {
+    isAboutOpen.value = true;
+  }, 800);
+
   emit("openPopup");
   hideLogo();
 
@@ -81,9 +96,31 @@ function handleOpenInfo() {
     opacity: 0,
     ease: "power2.out",
   });
+
+  gsap.to(".about-popup", {
+    duration: 0.1,
+    opacity: 1,
+    ease: "power2.out",
+    delay: 0.2,
+  });
+
+  gsap.to(".about-popup", {
+    duration: 0.3,
+    width: "92vw",
+    ease: "power2.out",
+    delay: 0.3,
+  });
+
+  gsap.to(".about-popup", {
+    duration: 0.4,
+    height: "80vh",
+    ease: "power2.out",
+    delay: 0.45,
+  });
 }
 
 function handleCloseInfo() {
+  isAboutOpen.value = false;
   emit("closePopup");
   showLogo();
 
@@ -92,6 +129,29 @@ function handleCloseInfo() {
     opacity: 1,
     ease: "power2.out",
     delay: 0.3,
+  });
+
+  const width = $q.screen.gt.sm ? "140px" : "44px";
+  const height = $q.screen.gt.sm ? "56px" : "44px";
+
+  gsap.to(".about-popup", {
+    duration: 0.1,
+    ease: "power2.out",
+    delay: 0.45,
+  });
+
+  gsap.to(".about-popup", {
+    duration: 0.2,
+    width,
+    opacity: 0,
+    ease: "power2.out",
+    delay: 0.3,
+  });
+
+  gsap.to(".about-popup", {
+    duration: 0.3,
+    height,
+    ease: "power2.out",
   });
 }
 
@@ -152,6 +212,13 @@ button.mobile {
   }
 }
 
+.close-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px;
+}
+
 .navbar-container {
   z-index: 200000;
   position: absolute;
@@ -191,12 +258,36 @@ button.mobile {
   justify-self: start;
 }
 
+.about-popup {
+  position: fixed;
+  top: 22px;
+  right: 4vw;
+  width: 140px;
+  height: 56px;
+  background: white;
+  box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
+  opacity: 0;
+  border-radius: 2px;
+  z-index: 50000;
+}
+
 .about-wrapper {
   justify-self: end;
+  // background: red;
+}
+
+.close-button {
+  pointer-events: auto;
 }
 
 body.screen--sm,
 body.screen--xs {
+  .about-popup {
+    width: 44px;
+    height: 44px;
+    top: 28px;
+  }
+
   .logo-wrapper {
     transform: translateY(4px);
   }
