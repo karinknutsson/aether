@@ -33,16 +33,26 @@
 </template>
 
 <script setup lang="ts">
-import { is, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 import SearchBar from "./SearchBar.vue";
 import gsap from "gsap";
 import { useSearchStore } from "src/stores/search-store";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
 const isAboutOpen = ref(false);
+
+const aboutPopupFullWidth = computed(() => {
+  if ($q.screen.lt.md) {
+    return "92vw";
+  } else if ($q.screen.md) {
+    return "340px";
+  } else {
+    return "420px";
+  }
+});
 
 function hideLogo() {
   gsap.to(".logo-wrapper", {
@@ -88,13 +98,16 @@ function handleOpenInfo() {
   }, 800);
 
   emit("openPopup");
-  hideLogo();
 
-  gsap.to(".search-wrapper", {
-    duration: 0.2,
-    opacity: 0,
-    ease: "power2.out",
-  });
+  if ($q.screen.lt.md) {
+    hideLogo();
+
+    gsap.to(".search-wrapper", {
+      duration: 0.2,
+      opacity: 0,
+      ease: "power2.out",
+    });
+  }
 
   gsap.to(".about-popup", {
     duration: 0.1,
@@ -105,7 +118,7 @@ function handleOpenInfo() {
 
   gsap.to(".about-popup", {
     duration: 0.3,
-    width: "92vw",
+    width: aboutPopupFullWidth.value,
     ease: "power2.out",
     delay: 0.3,
   });
@@ -121,14 +134,17 @@ function handleOpenInfo() {
 function handleCloseInfo() {
   isAboutOpen.value = false;
   emit("closePopup");
-  showLogo(0.5);
 
-  gsap.to(".search-wrapper", {
-    duration: 0.2,
-    opacity: 1,
-    ease: "power2.out",
-    delay: 0.4,
-  });
+  if ($q.screen.lt.md) {
+    showLogo(0.5);
+
+    gsap.to(".search-wrapper", {
+      duration: 0.2,
+      opacity: 1,
+      ease: "power2.out",
+      delay: 0.4,
+    });
+  }
 
   const width = $q.screen.gt.sm ? "140px" : "44px";
   const height = $q.screen.gt.sm ? "56px" : "44px";
