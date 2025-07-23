@@ -9,7 +9,7 @@
       <div class="meddon-lowercase">ther</div>
     </div>
 
-    <div class="about-wrapper">
+    <div v-if="!isAboutOpen" class="about-button-wrapper">
       <button
         type="button"
         class="nav-btn"
@@ -20,16 +20,15 @@
         ><i v-else class="pi pi-info-circle icon"></i>
       </button>
     </div>
-
-    <div class="about-popup">
-      <template v-if="isAboutOpen">
-        <div class="close-wrapper">
-          <button type="button" class="close-button flex-center" @click="handleCloseInfo">
-            <i class="pi pi-times icon"></i>
-          </button>
-        </div>
-      </template>
-    </div>
+  </div>
+  <div class="about-popup">
+    <template v-if="isAboutOpen">
+      <div class="close-wrapper">
+        <button type="button" class="close-button flex-center" @click="handleCloseInfo">
+          <i class="pi pi-times icon"></i>
+        </button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -53,12 +52,12 @@ function hideLogo() {
   });
 }
 
-function showLogo() {
+function showLogo(delay: number) {
   gsap.to(".logo-wrapper", {
     duration: 0.2,
     opacity: 1,
     ease: "power2.out",
-    delay: 0.3,
+    delay,
   });
 }
 
@@ -73,7 +72,7 @@ function handleOpenSearch() {
 }
 
 function handleCloseSearch() {
-  showLogo();
+  showLogo(0.3);
 
   gsap.to(".nav-btn", {
     duration: 0.2,
@@ -122,13 +121,13 @@ function handleOpenInfo() {
 function handleCloseInfo() {
   isAboutOpen.value = false;
   emit("closePopup");
-  showLogo();
+  showLogo(0.5);
 
   gsap.to(".search-wrapper", {
     duration: 0.2,
     opacity: 1,
     ease: "power2.out",
-    delay: 0.3,
+    delay: 0.4,
   });
 
   const width = $q.screen.gt.sm ? "140px" : "44px";
@@ -216,7 +215,6 @@ button.mobile {
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  padding: 8px;
 }
 
 .navbar-container {
@@ -259,7 +257,7 @@ button.mobile {
 }
 
 .about-popup {
-  position: fixed;
+  position: absolute;
   top: 22px;
   right: 4vw;
   width: 140px;
@@ -268,12 +266,14 @@ button.mobile {
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   opacity: 0;
   border-radius: 2px;
-  z-index: 50000;
+  z-index: 500000;
+  padding: 8px 16px 32px 16px;
+  pointer-events: none;
 }
 
-.about-wrapper {
+.about-button-wrapper {
   justify-self: end;
-  // background: red;
+  //background: red;
 }
 
 .close-button {
