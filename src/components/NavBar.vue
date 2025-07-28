@@ -28,6 +28,12 @@
           <i class="pi pi-times icon"></i>
         </button>
       </div>
+      <div v-if="$q.screen.lt.md" class="logo-wrapper">
+        <div class="meddon-capital">æ</div>
+        <div class="meddon-lowercase">ther</div>
+      </div>
+      <p>{{ aboutText[0] }}</p>
+      <p>{{ aboutText[1] }}</p>
     </template>
   </div>
 </template>
@@ -38,6 +44,7 @@ import SearchBar from "./SearchBar.vue";
 import gsap from "gsap";
 import { useSearchStore } from "src/stores/search-store";
 import { computed, ref, watch } from "vue";
+import { aboutText } from "./about-text";
 
 const searchStore = useSearchStore();
 const $q = useQuasar();
@@ -170,6 +177,33 @@ function handleCloseInfo() {
   });
 }
 
+function setInfoWidth(isDesktop: boolean) {
+  gsap.to(".about-popup", {
+    duration: 0.2,
+    width: aboutPopupFullWidth.value,
+    ease: "power2.out",
+  });
+
+  if (isDesktop) {
+    showLogo(0.5);
+
+    gsap.to(".search-wrapper", {
+      duration: 0.2,
+      opacity: 1,
+      ease: "power2.out",
+      delay: 0.4,
+    });
+  } else {
+    hideLogo();
+
+    gsap.to(".search-wrapper", {
+      duration: 0.2,
+      opacity: 0,
+      ease: "power2.out",
+    });
+  }
+}
+
 watch(
   () => $q.screen.gt.sm,
   (isDesktop) => {
@@ -178,6 +212,8 @@ watch(
     } else if (searchStore.isSearchOpen) {
       handleOpenSearch();
     }
+
+    if (isAboutOpen.value) setInfoWidth(isDesktop);
   },
 );
 
