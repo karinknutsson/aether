@@ -145,6 +145,11 @@ function handleOpenInfo() {
     ease: "power2.out",
     delay: 0.45,
   });
+
+  gsap.set(".about-popup", {
+    height: "unset",
+    delay: 0.85,
+  });
 }
 
 function handleCloseInfo() {
