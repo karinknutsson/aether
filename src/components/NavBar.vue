@@ -14,7 +14,7 @@
         type="button"
         class="nav-btn"
         :class="$q.screen.gt.sm ? 'desktop' : 'mobile'"
-        @click="handleOpenInfo"
+        @click="handleOpenAboutPopup"
       >
         <template v-if="$q.screen.gt.sm">About</template
         ><i v-else class="pi pi-info-circle icon"></i>
@@ -24,7 +24,7 @@
   <div ref="aboutPopupRef" class="about-popup">
     <template v-if="isAboutPopupOpen">
       <div class="close-wrapper">
-        <button type="button" class="close-button flex-center" @click="handleCloseInfo">
+        <button type="button" class="close-button flex-center" @click="handleCloseAboutPopup">
           <i class="pi pi-times icon"></i>
         </button>
       </div>
@@ -68,12 +68,11 @@ const aboutPopupFullWidth = computed(() => {
 
 onMounted(async () => {
   await nextTick();
-  const popup = document.querySelector(".about-popup") as HTMLElement;
-  aboutPopupFullHeight.value = popup.offsetHeight;
+  if (aboutPopupRef.value) aboutPopupFullHeight.value = aboutPopupRef.value.offsetHeight;
 });
 
 onClickOutside(aboutPopupRef, () => {
-  if (isAboutPopupOpen.value) handleCloseInfo();
+  if (isAboutPopupOpen.value) handleCloseAboutPopup();
 });
 
 function hideLogo() {
@@ -114,7 +113,7 @@ function handleCloseSearch() {
   });
 }
 
-function handleOpenInfo() {
+function handleOpenAboutPopup() {
   setTimeout(() => {
     isAboutPopupOpen.value = true;
   }, 800);
@@ -153,12 +152,18 @@ function handleOpenInfo() {
   });
 
   gsap.set(".about-popup", {
-    height: "unset",
+    height: "auto",
     delay: 0.85,
   });
 }
 
-function handleCloseInfo() {
+function handleCloseAboutPopup() {
+  if (aboutPopupRef.value) {
+    gsap.set(aboutPopupRef.value, {
+      height: aboutPopupFullHeight.value + "px",
+    });
+  }
+
   isAboutPopupOpen.value = false;
   emit("closePopup");
 
@@ -178,6 +183,7 @@ function handleCloseInfo() {
 
   gsap.to(".about-popup", {
     duration: 0.1,
+    opacity: 0,
     ease: "power2.out",
     delay: 0.45,
   });
@@ -185,14 +191,13 @@ function handleCloseInfo() {
   gsap.to(".about-popup", {
     duration: 0.2,
     width,
-    opacity: 0,
     ease: "power2.out",
     delay: 0.3,
   });
 
   gsap.to(".about-popup", {
     duration: 0.3,
-    height,
+    height: height,
     ease: "power2.out",
   });
 }
