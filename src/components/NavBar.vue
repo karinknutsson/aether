@@ -21,8 +21,8 @@
       </button>
     </div>
   </div>
-  <div class="about-popup">
-    <template v-if="isAboutOpen">
+  <div ref="aboutPopupRef" class="about-popup">
+    <template v-if="isAboutPopupOpen">
       <div class="close-wrapper">
         <button type="button" class="close-button flex-center" @click="handleCloseInfo">
           <i class="pi pi-times icon"></i>
@@ -47,11 +47,13 @@ import gsap from "gsap";
 import { useSearchStore } from "src/stores/search-store";
 import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { aboutText } from "./about-text";
+import { onClickOutside } from "@vueuse/core";
 
 const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
-const isAboutOpen = ref(true);
+const isAboutPopupOpen = ref(true);
+const aboutPopupRef = ref<HTMLElement | null>(null);
 const aboutPopupFullHeight = ref(0);
 
 const aboutPopupFullWidth = computed(() => {
@@ -68,6 +70,10 @@ onMounted(async () => {
   await nextTick();
   const popup = document.querySelector(".about-popup") as HTMLElement;
   aboutPopupFullHeight.value = popup.offsetHeight;
+});
+
+onClickOutside(aboutPopupRef, () => {
+  if (isAboutPopupOpen.value) handleCloseInfo();
 });
 
 function hideLogo() {
@@ -110,7 +116,7 @@ function handleCloseSearch() {
 
 function handleOpenInfo() {
   setTimeout(() => {
-    isAboutOpen.value = true;
+    isAboutPopupOpen.value = true;
   }, 800);
 
   emit("openPopup");
@@ -153,7 +159,7 @@ function handleOpenInfo() {
 }
 
 function handleCloseInfo() {
-  isAboutOpen.value = false;
+  isAboutPopupOpen.value = false;
   emit("closePopup");
 
   if ($q.screen.lt.md) {
@@ -227,7 +233,7 @@ watch(
       handleOpenSearch();
     }
 
-    if (isAboutOpen.value) setInfoWidth(isDesktop);
+    if (isAboutPopupOpen.value) setInfoWidth(isDesktop);
   },
 );
 
@@ -254,7 +260,7 @@ watch(aboutPopupFullHeight, (value) => {
       height,
     });
 
-    isAboutOpen.value = false;
+    isAboutPopupOpen.value = false;
   }
 });
 </script>
@@ -276,7 +282,6 @@ button.desktop {
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
-  // font-style: italic;
   padding: 0 32px;
   width: 140px;
   height: 56px;
@@ -370,7 +375,7 @@ body.screen--xs {
   }
 
   .about-text-wrapper {
-    margin-top: 16px;
+    margin-top: 24px;
   }
 
   .meddon-capital {
