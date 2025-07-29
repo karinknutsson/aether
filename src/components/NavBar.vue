@@ -357,7 +357,7 @@ button.mobile {
   opacity: 0;
   border-radius: 2px;
   z-index: 500000;
-  padding: 8px 16px 32px 16px;
+  padding: 8px 16px 16px 16px;
   pointer-events: none;
 }
 
