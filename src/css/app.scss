@@ -28,6 +28,10 @@ h2 {
   // text-transform: uppercase;
 }
 
+p {
+  font-weight: 500;
+}
+
 .flex-center {
   display: flex;
   align-items: center;
@@ -43,7 +47,7 @@ h2 {
   color: #909090;
   padding: 0;
   transform: translateX(8px);
-  margin-bottom: 4px;
+  // margin-bottom: 4px;
 
   i {
     font-size: 20px;

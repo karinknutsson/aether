@@ -44,7 +44,7 @@ const showPopup = ref(false);
 const showSuggestionPopup = ref(false);
 let isOpeningSuggestionPopup = false;
 const showSuggestButton = ref(false);
-const suggestionPopupRect = ref({ w: 400, h: 300, x: 0, y: 0, lat: 0, lng: 0 } as PopupRect);
+const suggestionPopupRect = ref({ w: 400, h: 320, x: 0, y: 0, lat: 0, lng: 0 } as PopupRect);
 const popup = ref<Popup>({ title: "", attachments: [], folderName: "" });
 let isAnimating = false;
 
