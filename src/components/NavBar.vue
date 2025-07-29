@@ -305,6 +305,7 @@ button.mobile {
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 12px;
 }
 
 .navbar-container {
@@ -380,7 +381,7 @@ body.screen--xs {
   }
 
   .about-text-wrapper {
-    margin-top: 24px;
+    margin-top: 32px;
   }
 
   .meddon-capital {
