@@ -67,7 +67,6 @@ const aboutPopupFullWidth = computed(() => {
 onMounted(async () => {
   await nextTick();
   const popup = document.querySelector(".about-popup") as HTMLElement;
-  console.log(popup.offsetHeight);
   aboutPopupFullHeight.value = popup.offsetHeight;
 });
 
@@ -251,9 +250,6 @@ watch(aboutPopupFullHeight, (value) => {
     });
 
     isAboutOpen.value = false;
-
-    const popup = document.querySelector(".about-popup") as HTMLElement;
-    console.log(popup.offsetHeight);
   }
 });
 </script>
@@ -340,7 +336,6 @@ button.mobile {
   top: 22px;
   right: 4vw;
   width: v-bind(aboutPopupFullWidth);
-  // height: 56px;
   background: white;
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   opacity: 0;
@@ -352,7 +347,6 @@ button.mobile {
 
 .about-button-wrapper {
   justify-self: end;
-  //background: red;
 }
 
 .close-button {
@@ -362,8 +356,7 @@ button.mobile {
 body.screen--sm,
 body.screen--xs {
   .about-popup {
-    width: 44px;
-    // height: 44px;
+    width: v-bind(aboutPopupFullWidth);
     top: 28px;
   }
 
