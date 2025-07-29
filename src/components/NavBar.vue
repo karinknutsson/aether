@@ -9,7 +9,7 @@
       <div class="meddon-lowercase">ther</div>
     </div>
 
-    <div v-if="!isAboutOpen" class="about-button-wrapper">
+    <div class="about-button-wrapper">
       <button
         type="button"
         class="nav-btn"
@@ -32,8 +32,10 @@
         <div class="meddon-capital">æ</div>
         <div class="meddon-lowercase">ther</div>
       </div>
-      <p>{{ aboutText[0] }}</p>
-      <p>{{ aboutText[1] }}</p>
+      <div class="about-text-wrapper">
+        <p>{{ aboutText[0] }}</p>
+        <p>{{ aboutText[1] }}</p>
+      </div>
     </template>
   </div>
 </template>
@@ -43,13 +45,14 @@ import { useQuasar } from "quasar";
 import SearchBar from "./SearchBar.vue";
 import gsap from "gsap";
 import { useSearchStore } from "src/stores/search-store";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { aboutText } from "./about-text";
 
 const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
-const isAboutOpen = ref(false);
+const isAboutOpen = ref(true);
+const aboutPopupFullHeight = ref(0);
 
 const aboutPopupFullWidth = computed(() => {
   if ($q.screen.lt.md) {
@@ -59,6 +62,13 @@ const aboutPopupFullWidth = computed(() => {
   } else {
     return "420px";
   }
+});
+
+onMounted(async () => {
+  await nextTick();
+  const popup = document.querySelector(".about-popup") as HTMLElement;
+  console.log(popup.offsetHeight);
+  aboutPopupFullHeight.value = popup.offsetHeight;
 });
 
 function hideLogo() {
@@ -132,7 +142,7 @@ function handleOpenInfo() {
 
   gsap.to(".about-popup", {
     duration: 0.4,
-    height: "80vh",
+    height: aboutPopupFullHeight.value + "px",
     ease: "power2.out",
     delay: 0.45,
   });
@@ -229,6 +239,23 @@ watch(
     }
   },
 );
+
+watch(aboutPopupFullHeight, (value) => {
+  if (value) {
+    const width = $q.screen.gt.sm ? "140px" : "44px";
+    const height = $q.screen.gt.sm ? "56px" : "44px";
+
+    gsap.set(".about-popup", {
+      width,
+      height,
+    });
+
+    isAboutOpen.value = false;
+
+    const popup = document.querySelector(".about-popup") as HTMLElement;
+    console.log(popup.offsetHeight);
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -312,8 +339,8 @@ button.mobile {
   position: absolute;
   top: 22px;
   right: 4vw;
-  width: 140px;
-  height: 56px;
+  width: v-bind(aboutPopupFullWidth);
+  // height: 56px;
   background: white;
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   opacity: 0;
@@ -336,12 +363,16 @@ body.screen--sm,
 body.screen--xs {
   .about-popup {
     width: 44px;
-    height: 44px;
+    // height: 44px;
     top: 28px;
   }
 
   .logo-wrapper {
     transform: translateY(4px);
+  }
+
+  .about-text-wrapper {
+    margin-top: 16px;
   }
 
   .meddon-capital {
