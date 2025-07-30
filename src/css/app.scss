@@ -44,13 +44,19 @@ p {
   border-radius: 50%;
   width: 36px;
   height: 36px;
-  color: #909090;
+  color: $deep-blue;
   padding: 0;
   transform: translateX(8px);
-  // margin-bottom: 4px;
 
   i {
     font-size: 20px;
+  }
+}
+
+body.screen--sm,
+body.screen--xs {
+  i {
+    font-size: 18px;
   }
 }
 

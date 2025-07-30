@@ -4,9 +4,19 @@
       <SearchBar />
     </div>
 
-    <div class="logo-wrapper">
-      <div class="meddon-capital">æ</div>
-      <div class="meddon-lowercase">ther</div>
+    <div :class="$q.screen.gt.sm ? 'logo-wrapper-desktop' : 'logo-wrapper-mobile'">
+      <div
+        class="meddon capital"
+        :class="$q.screen.gt.sm ? 'meddon-capital-desktop' : 'meddon-capital-mobile'"
+      >
+        æ
+      </div>
+      <div
+        class="meddon"
+        :class="$q.screen.gt.sm ? 'meddon-lowercase-desktop' : 'meddon-lowercase-mobile'"
+      >
+        ther
+      </div>
     </div>
 
     <div class="about-button-wrapper">
@@ -28,9 +38,22 @@
           <i class="pi pi-times icon"></i>
         </button>
       </div>
-      <div v-if="$q.screen.lt.md" class="logo-wrapper">
-        <div class="meddon-capital">æ</div>
-        <div class="meddon-lowercase">ther</div>
+      <div
+        v-if="$q.screen.lt.md"
+        :class="$q.screen.gt.xs ? 'logo-wrapper-desktop' : 'logo-wrapper-mobile'"
+      >
+        <div
+          class="meddon capital"
+          :class="$q.screen.gt.xs ? 'meddon-capital-desktop' : 'meddon-capital-mobile'"
+        >
+          æ
+        </div>
+        <div
+          class="meddon"
+          :class="$q.screen.gt.xs ? 'meddon-lowercase-desktop' : 'meddon-lowercase-mobile'"
+        >
+          ther
+        </div>
       </div>
       <div class="about-text-wrapper">
         <p>{{ aboutText[0] }}</p>
@@ -322,25 +345,45 @@ button.mobile {
   pointer-events: none;
 }
 
-.logo-wrapper {
+.logo-wrapper-desktop {
   transform: translateY(7px);
   display: flex;
   justify-content: center;
 }
 
-.meddon-capital {
-  text-transform: uppercase;
+.meddon {
   font-family: "Meddon", cursive;
-  font-size: 56px;
-  transform: translate(8px, 8px);
   margin: 0;
 }
 
-.meddon-lowercase {
-  font-family: "Meddon", cursive;
+.capital {
+  text-transform: uppercase;
+}
+
+.meddon-capital-desktop {
+  font-size: 56px;
+  transform: translate(8px, 8px);
+}
+
+.meddon-lowercase-desktop {
   font-size: 56px;
   transform: translateX(-9px);
-  margin: 0;
+}
+
+.logo-wrapper-mobile {
+  transform: translateY(4px);
+  display: flex;
+  justify-content: center;
+}
+
+.meddon-capital-mobile {
+  font-size: 36px;
+  transform: translate(5px, 5px);
+}
+
+.meddon-lowercase-mobile {
+  font-size: 36px;
+  transform: translateX(-6px);
 }
 
 .search-wrapper {
@@ -357,7 +400,7 @@ button.mobile {
   opacity: 0;
   border-radius: 2px;
   z-index: 500000;
-  padding: 8px 16px 16px 16px;
+  padding: 4px 12px 16px 16px;
   pointer-events: none;
 }
 
@@ -376,27 +419,8 @@ body.screen--xs {
     top: 28px;
   }
 
-  .logo-wrapper {
-    transform: translateY(4px);
-  }
-
   .about-text-wrapper {
     margin-top: 32px;
-  }
-
-  .meddon-capital {
-    text-transform: uppercase;
-    font-family: "Meddon", cursive;
-    font-size: 36px;
-    transform: translate(5px, 5px);
-    margin: 0;
-  }
-
-  .meddon-lowercase {
-    font-family: "Meddon", cursive;
-    font-size: 36px;
-    transform: translateX(-6px);
-    margin: 0;
   }
 }
 </style>
