@@ -12,6 +12,9 @@
 <script setup lang="ts">
 import { PropType, onMounted, onUnmounted } from "vue";
 import gsap from "gsap";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const props = defineProps({
   images: {
@@ -37,7 +40,7 @@ onMounted(() => {
 
   if (props.images.length > 1) {
     isAnimating = true;
-    animate();
+    $q.screen.gt.sm ? animateDesktop() : animateMobile();
   }
 });
 
@@ -45,7 +48,7 @@ onUnmounted(() => {
   isAnimating = false;
 });
 
-function animate() {
+function animateMobile() {
   if (!isAnimating) return;
 
   gsap.to(`.image-${currentIndex}`, {
@@ -66,7 +69,33 @@ function animate() {
       } else {
         currentIndex++;
       }
-      animate();
+      animateMobile();
+    },
+  });
+}
+
+function animateDesktop() {
+  if (!isAnimating) return;
+
+  gsap.to(`.image-${currentIndex}`, {
+    opacity: 1,
+    duration: 3,
+    delay: 2,
+  });
+
+  gsap.to(`.image-${previousIndex}`, {
+    opacity: 0,
+    duration: 3,
+    delay: 2,
+    onComplete: () => {
+      previousIndex = currentIndex;
+
+      if (currentIndex === props.images.length - 1) {
+        currentIndex = 0;
+      } else {
+        currentIndex++;
+      }
+      animateDesktop();
     },
   });
 }
